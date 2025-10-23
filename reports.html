@@ -8,144 +8,203 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+        }
     </style>
 </head>
-<body class="text-white p-6">
-    <!-- شريط التنقل -->
-    <nav class="bg-white/10 backdrop-blur-md p-4 rounded-xl mb-6 flex justify-between items-center">
-        <div class="flex items-center space-x-4 space-x-reverse">
-            <a href="dashboard.html" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+<body class="text-white p-4">
+    <!-- الشريط العلوي -->
+    <nav class="card rounded-xl p-4 mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <a href="dashboard.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all">
                 <i class="fa-solid fa-arrow-right ml-2"></i> العودة
             </a>
             <h1 class="text-xl font-bold flex items-center">
                 <i class="fa-solid fa-chart-bar ml-2"></i> التقارير والإحصائيات
             </h1>
         </div>
-        
-        <div class="flex items-center space-x-2 space-x-reverse">
-            <div id="clock" class="bg-white/10 px-3 py-1 rounded-lg"></div>
+        <div class="flex items-center space-x-4">
+            <a href="index.html" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-all">
+                <i class="fa-solid fa-home ml-2"></i> الرئيسية
+            </a>
         </div>
     </nav>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <!-- فلترة التقارير -->
-        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-            <h3 class="text-xl font-bold mb-4">فلترة التقارير</h3>
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
+    <div class="container mx-auto">
+        <!-- الإحصائيات السريعة -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card card rounded-xl p-6">
+                <div class="flex justify-between items-start">
                     <div>
-                        <label class="block mb-2">من تاريخ</label>
-                        <input type="date" id="startDate" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                        <p class="text-white/70 mb-2">إجمالي المبيعات</p>
+                        <h3 class="text-2xl font-bold" id="totalSales">0 د.ع</h3>
                     </div>
-                    <div>
-                        <label class="block mb-2">إلى تاريخ</label>
-                        <input type="date" id="endDate" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                    <div class="bg-green-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-money-bill-wave text-green-400 text-xl"></i>
                     </div>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4">
+            </div>
+            
+            <div class="stat-card card rounded-xl p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70 mb-2">عدد الفواتير</p>
+                        <h3 class="text-2xl font-bold" id="totalInvoices">0</h3>
+                    </div>
+                    <div class="bg-blue-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-receipt text-blue-400 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card card rounded-xl p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70 mb-2">متوسط الفاتورة</p>
+                        <h3 class="text-2xl font-bold" id="avgInvoice">0 د.ع</h3>
+                    </div>
+                    <div class="bg-purple-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-chart-line text-purple-400 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card card rounded-xl p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70 mb-2">أفضل عميل</p>
+                        <h3 class="text-xl font-bold" id="topCustomer">-</h3>
+                    </div>
+                    <div class="bg-yellow-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-crown text-yellow-400 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- أدوات التقرير -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- فلترة -->
+            <div class="card rounded-xl p-6 lg:col-span-1">
+                <h3 class="text-xl font-bold mb-4">إعدادات التقرير</h3>
+                <div class="space-y-4">
                     <div>
                         <label class="block mb-2">نوع التقرير</label>
-                        <select id="reportType" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                        <select id="reportType" class="w-full px-3 py-2 rounded-lg bg-white/20 text-white focus:outline-none focus:ring-2 focus:ring-white/50">
                             <option value="sales">تقرير المبيعات</option>
                             <option value="products">تقرير المنتجات</option>
                             <option value="customers">تقرير العملاء</option>
                         </select>
                     </div>
+                    
                     <div>
                         <label class="block mb-2">الفترة</label>
-                        <select id="period" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                        <select id="period" class="w-full px-3 py-2 rounded-lg bg-white/20 text-white focus:outline-none focus:ring-2 focus:ring-white/50">
+                            <option value="all">جميع الفترات</option>
                             <option value="today">اليوم</option>
                             <option value="week">هذا الأسبوع</option>
                             <option value="month">هذا الشهر</option>
                             <option value="year">هذه السنة</option>
-                            <option value="custom">مخصص</option>
                         </select>
                     </div>
+
+                    <button onclick="generateReport()" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition-all">
+                        <i class="fa-solid fa-chart-line ml-2"></i> إنشاء التقرير
+                    </button>
+
+                    <button onclick="exportToExcel()" class="w-full bg-blue-500 hover:bg-blue-600 py-3 rounded-lg font-semibold transition-all">
+                        <i class="fa-solid fa-file-excel ml-2"></i> تصدير Excel
+                    </button>
                 </div>
-                
-                <button onclick="generateReport()" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition">
-                    <i class="fa-solid fa-chart-line ml-2"></i> إنشاء التقرير
-                </button>
+            </div>
+
+            <!-- نتائج التقرير -->
+            <div class="card rounded-xl p-6 lg:col-span-2">
+                <h3 class="text-xl font-bold mb-4" id="reportTitle">تقرير المبيعات</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-center" id="reportTable">
+                        <!-- سيتم ملؤها بنتائج التقرير -->
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- ملخص سريع -->
-        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-            <h3 class="text-xl font-bold mb-4">ملخص سريع</h3>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
-                    <span>إجمالي المبيعات:</span>
-                    <span class="font-bold" id="totalSales">0 د.ع</span>
-                </div>
-                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
-                    <span>عدد الفواتير:</span>
-                    <span class="font-bold" id="totalInvoices">0</span>
-                </div>
-                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
-                    <span>متوسط قيمة الفاتورة:</span>
-                    <span class="font-bold" id="averageInvoice">0 د.ع</span>
-                </div>
-                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
-                    <span>أفضل عميل:</span>
-                    <span class="font-bold" id="topCustomer">-</span>
+        <!-- المخططات -->
+        <div class="card rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">مخطط المبيعات</h3>
+            <div class="bg-white/10 rounded-lg p-6">
+                <div id="salesChart" class="text-center text-white/50">
+                    <i class="fa-solid fa-chart-bar text-4xl mb-2 block"></i>
+                    <p>سيظهر مخطط المبيعات هنا بعد إنشاء التقرير</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نتائج التقرير -->
-    <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-        <h3 class="text-xl font-bold mb-4" id="reportTitle">تقرير المبيعات</h3>
-        
-        <div class="overflow-x-auto">
-            <table class="w-full text-center" id="reportTable">
-                <!-- سيتم ملؤها بنتائج التقرير -->
-            </table>
-        </div>
-        
-        <div class="mt-4 flex justify-end">
-            <button onclick="exportToExcel()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold transition">
-                <i class="fa-solid fa-file-excel ml-2"></i> تصدير إلى Excel
-            </button>
-        </div>
-    </div>
-
-    <script src="js/app.js"></script>
     <script>
-        // تهيئة التطبيق
-        SAWA_POS.init();
-        updateQuickSummary();
+        let invoices = [];
+        let products = [];
+        let customers = [];
 
-        // تحديث الملخص السريع
-        function updateQuickSummary() {
-            const invoices = window.appData.invoices;
+        // تحميل البيانات
+        function loadData() {
+            const data = localStorage.getItem('sawaPOSData');
+            if (data) {
+                const parsed = JSON.parse(data);
+                invoices = parsed.invoices || [];
+                products = parsed.products || [];
+                customers = parsed.customers || [];
+            }
+            return parsed;
+        }
+
+        // تنسيق العملة
+        function formatCurrency(amount) {
+            const data = loadData();
+            const currency = data?.settings?.currency || 'د.ع';
+            return new Intl.NumberFormat('ar-IQ').format(amount) + ' ' + currency;
+        }
+
+        // تحديث الإحصائيات السريعة
+        function updateQuickStats() {
             const totalSales = invoices.reduce((sum, inv) => sum + inv.total, 0);
             const totalInvoices = invoices.length;
-            const averageInvoice = totalInvoices > 0 ? totalSales / totalInvoices : 0;
-            
+            const avgInvoice = totalInvoices > 0 ? totalSales / totalInvoices : 0;
+
             // إيجاد أفضل عميل
             const customerSales = {};
             invoices.forEach(inv => {
-                customerSales[inv.customer] = (customerSales[inv.customer] || 0) + inv.total;
+                if (inv.customer !== 'عميل نقدي') {
+                    customerSales[inv.customer] = (customerSales[inv.customer] || 0) + inv.total;
+                }
             });
-            
+
             let topCustomer = '-';
             let maxSales = 0;
             Object.keys(customerSales).forEach(customer => {
-                if (customerSales[customer] > maxSales && customer !== 'عميل نقدي') {
+                if (customerSales[customer] > maxSales) {
                     maxSales = customerSales[customer];
                     topCustomer = customer;
                 }
             });
-            
-            document.getElementById('totalSales').textContent = SAWA_POS.formatCurrency(totalSales);
+
+            document.getElementById('totalSales').textContent = formatCurrency(totalSales);
             document.getElementById('totalInvoices').textContent = totalInvoices;
-            document.getElementById('averageInvoice').textContent = SAWA_POS.formatCurrency(averageInvoice);
+            document.getElementById('avgInvoice').textContent = formatCurrency(avgInvoice);
             document.getElementById('topCustomer').textContent = topCustomer;
         }
 
@@ -153,10 +212,8 @@
         function generateReport() {
             const reportType = document.getElementById('reportType').value;
             const period = document.getElementById('period').value;
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
             
-            let filteredInvoices = filterInvoicesByPeriod(period, startDate, endDate);
+            let filteredInvoices = filterInvoicesByPeriod(period);
             
             switch(reportType) {
                 case 'sales':
@@ -169,44 +226,38 @@
                     generateCustomersReport(filteredInvoices);
                     break;
             }
+            
+            updateSalesChart(filteredInvoices);
         }
 
         // تصفية الفواتير حسب الفترة
-        function filterInvoicesByPeriod(period, startDate, endDate) {
-            let filteredInvoices = [...window.appData.invoices];
+        function filterInvoicesByPeriod(period) {
+            if (period === 'all') return invoices;
             
-            if (period === 'custom' && startDate && endDate) {
-                filteredInvoices = filteredInvoices.filter(inv => 
-                    inv.date >= startDate && inv.date <= endDate
-                );
-            } else {
-                const today = new Date();
-                let startDateFilter;
-                
-                switch(period) {
-                    case 'today':
-                        startDateFilter = today.toISOString().split('T')[0];
-                        filteredInvoices = filteredInvoices.filter(inv => inv.date === startDateFilter);
-                        break;
-                    case 'week':
-                        startDateFilter = new Date(today);
-                        startDateFilter.setDate(today.getDate() - 7);
-                        filteredInvoices = filteredInvoices.filter(inv => new Date(inv.date) >= startDateFilter);
-                        break;
-                    case 'month':
-                        startDateFilter = new Date(today);
-                        startDateFilter.setMonth(today.getMonth() - 1);
-                        filteredInvoices = filteredInvoices.filter(inv => new Date(inv.date) >= startDateFilter);
-                        break;
-                    case 'year':
-                        startDateFilter = new Date(today);
-                        startDateFilter.setFullYear(today.getFullYear() - 1);
-                        filteredInvoices = filteredInvoices.filter(inv => new Date(inv.date) >= startDateFilter);
-                        break;
-                }
+            const today = new Date();
+            let startDate;
+            
+            switch(period) {
+                case 'today':
+                    startDate = new Date(today);
+                    break;
+                case 'week':
+                    startDate = new Date(today);
+                    startDate.setDate(today.getDate() - 7);
+                    break;
+                case 'month':
+                    startDate = new Date(today);
+                    startDate.setMonth(today.getMonth() - 1);
+                    break;
+                case 'year':
+                    startDate = new Date(today);
+                    startDate.setFullYear(today.getFullYear() - 1);
+                    break;
+                default:
+                    return invoices;
             }
             
-            return filteredInvoices;
+            return invoices.filter(inv => new Date(inv.date) >= startDate);
         }
 
         // تقرير المبيعات
@@ -237,16 +288,16 @@
                             <tr class="border-b border-white/10">
                                 <td class="py-3">${date}</td>
                                 <td class="py-3">${dateInvoices.length}</td>
-                                <td class="py-3">${SAWA_POS.formatCurrency(totalSales)}</td>
-                                <td class="py-3">${SAWA_POS.formatCurrency(average)}</td>
+                                <td class="py-3">${formatCurrency(totalSales)}</td>
+                                <td class="py-3">${formatCurrency(average)}</td>
                             </tr>
                         `;
                     }).join('')}
                     <tr class="border-t border-white/20 font-bold">
                         <td class="py-3">المجموع</td>
                         <td class="py-3">${invoices.length}</td>
-                        <td class="py-3">${SAWA_POS.formatCurrency(invoices.reduce((sum, inv) => sum + inv.total, 0))}</td>
-                        <td class="py-3">${SAWA_POS.formatCurrency(invoices.length > 0 ? invoices.reduce((sum, inv) => sum + inv.total, 0) / invoices.length : 0)}</td>
+                        <td class="py-3">${formatCurrency(invoices.reduce((sum, inv) => sum + inv.total, 0))}</td>
+                        <td class="py-3">${formatCurrency(invoices.length > 0 ? invoices.reduce((sum, inv) => sum + inv.total, 0) / invoices.length : 0)}</td>
                     </tr>
                 </tbody>
             `;
@@ -267,7 +318,7 @@
                 });
             });
             
-            const sortedProducts = Object.keys(productSales).sort((a, b) => productSales[b].quantity - productSales[a].quantity);
+            const sortedProducts = Object.keys(productSales).sort((a, b) => productSales[b].revenue - productSales[a].revenue);
             
             const tableHtml = `
                 <thead>
@@ -287,8 +338,8 @@
                             <tr class="border-b border-white/10">
                                 <td class="py-3">${product}</td>
                                 <td class="py-3">${sales.quantity}</td>
-                                <td class="py-3">${SAWA_POS.formatCurrency(sales.revenue)}</td>
-                                <td class="py-3">${SAWA_POS.formatCurrency(avgPrice)}</td>
+                                <td class="py-3">${formatCurrency(sales.revenue)}</td>
+                                <td class="py-3">${formatCurrency(avgPrice)}</td>
                             </tr>
                         `;
                     }).join('')}
@@ -331,8 +382,8 @@
                             <tr class="border-b border-white/10">
                                 <td class="py-3">${customer}</td>
                                 <td class="py-3">${stats.invoices}</td>
-                                <td class="py-3">${SAWA_POS.formatCurrency(stats.total)}</td>
-                                <td class="py-3">${SAWA_POS.formatCurrency(avgInvoice)}</td>
+                                <td class="py-3">${formatCurrency(stats.total)}</td>
+                                <td class="py-3">${formatCurrency(avgInvoice)}</td>
                             </tr>
                         `;
                     }).join('')}
@@ -340,6 +391,41 @@
             `;
             
             document.getElementById('reportTable').innerHTML = tableHtml;
+        }
+
+        // تحديث مخطط المبيعات
+        function updateSalesChart(invoices) {
+            const salesByDate = {};
+            invoices.forEach(inv => {
+                salesByDate[inv.date] = (salesByDate[inv.date] || 0) + inv.total;
+            });
+            
+            const dates = Object.keys(salesByDate).sort();
+            const sales = dates.map(date => salesByDate[date]);
+            
+            // مخطط نصي بسيط
+            const maxSales = Math.max(...sales);
+            const chartHtml = dates.map((date, index) => {
+                const percentage = (sales[index] / maxSales) * 100;
+                return `
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm">${date}</span>
+                            <span class="text-sm font-semibold">${formatCurrency(sales[index])}</span>
+                        </div>
+                        <div class="w-full bg-white/20 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('salesChart').innerHTML = chartHtml || `
+                <div class="text-center text-white/50 py-8">
+                    <i class="fa-solid fa-chart-line text-4xl mb-2"></i>
+                    <p>لا توجد بيانات لعرض المخطط</p>
+                </div>
+            `;
         }
 
         // تصدير إلى Excel
@@ -362,7 +448,7 @@
             table.querySelectorAll('tbody tr').forEach(tr => {
                 const row = [];
                 tr.querySelectorAll('td').forEach(td => {
-                    row.push(td.textContent);
+                    row.push(td.textContent.replace(' د.ع', '').replace(/,/g, ''));
                 });
                 csv.push(row.join(','));
             });
@@ -380,24 +466,31 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            showNotification('تم تصدير التقرير بنجاح!');
         }
 
-        // تحديث تواريخ الفلترة
-        document.getElementById('period').addEventListener('change', function() {
-            const today = new Date().toISOString().split('T')[0];
+        // إشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white`;
+            notification.textContent = message;
             
-            if (this.value === 'today') {
-                document.getElementById('startDate').value = today;
-                document.getElementById('endDate').value = today;
-            } else if (this.value === 'custom') {
-                document.getElementById('startDate').value = '';
-                document.getElementById('endDate').value = '';
-            }
-        });
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
 
-        // تعيين تواريخ افتراضية
-        document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('endDate').value = new Date().toISOString().split('T')[0];
+        // تهيئة الصفحة
+        function initReports() {
+            loadData();
+            updateQuickStats();
+            generateReport(); // إنشاء تقرير افتراضي
+        }
+
+        // تشغيل عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initReports);
     </script>
 </body>
 </html>
