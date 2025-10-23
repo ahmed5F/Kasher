@@ -8,59 +8,77 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .customer-row:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
     </style>
 </head>
-<body class="text-white p-6">
-    <!-- شريط التنقل -->
-    <nav class="bg-white/10 backdrop-blur-md p-4 rounded-xl mb-6 flex justify-between items-center">
-        <div class="flex items-center space-x-4 space-x-reverse">
-            <a href="dashboard.html" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+<body class="text-white p-4">
+    <!-- الشريط العلوي -->
+    <nav class="card rounded-xl p-4 mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <a href="dashboard.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all">
                 <i class="fa-solid fa-arrow-right ml-2"></i> العودة
             </a>
             <h1 class="text-xl font-bold flex items-center">
                 <i class="fa-solid fa-users ml-2"></i> إدارة العملاء
             </h1>
         </div>
+        <div class="flex items-center space-x-4">
+            <a href="index.html" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-all">
+                <i class="fa-solid fa-home ml-2"></i> الرئيسية
+            </a>
+        </div>
     </nav>
 
-    <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-            <div>
-                <h2 class="text-2xl font-bold">قائمة العملاء</h2>
-                <p class="text-white/70">إجمالي العملاء: <span id="customersCount">0</span></p>
-            </div>
-            
-            <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                <input id="customerSearch" type="text" placeholder="ابحث عن عميل..." 
-                    class="px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
-                <button onclick="openCustomerModal()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-semibold transition whitespace-nowrap">
-                    <i class="fa-solid fa-plus ml-2"></i> إضافة عميل
-                </button>
+    <div class="container mx-auto">
+        <!-- رأس الصفحة -->
+        <div class="card rounded-xl p-6 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">قائمة العملاء</h2>
+                    <p class="text-white/70">إجمالي العملاء: <span id="customersCount">0</span></p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                    <input type="text" id="searchCustomers" placeholder="ابحث عن عميل..." 
+                        class="px-4 py-2 rounded-lg bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                    <button onclick="openCustomerModal()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-semibold transition-all">
+                        <i class="fa-solid fa-plus ml-2"></i> إضافة عميل
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-center">
-                <thead>
-                    <tr class="border-b border-white/20">
-                        <th class="pb-3">#</th>
-                        <th class="pb-3">اسم العميل</th>
-                        <th class="pb-3">الهاتف</th>
-                        <th class="pb-3">البريد الإلكتروني</th>
-                        <th class="pb-3">العنوان</th>
-                        <th class="pb-3">عدد الفواتير</th>
-                        <th class="pb-3">إجمالي المشتريات</th>
-                        <th class="pb-3">الإجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="customersTable">
-                    <!-- سيتم ملؤها بالعملاء -->
-                </tbody>
-            </table>
+        <!-- جدول العملاء -->
+        <div class="card rounded-xl p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-white/20">
+                            <th class="pb-4 text-right">#</th>
+                            <th class="pb-4 text-right">العميل</th>
+                            <th class="pb-4 text-center">الهاتف</th>
+                            <th class="pb-4 text-center">البريد الإلكتروني</th>
+                            <th class="pb-4 text-center">الفواتير</th>
+                            <th class="pb-4 text-center">إجمالي المشتريات</th>
+                            <th class="pb-4 text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTable">
+                        <!-- سيتم ملؤها بالعملاء -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -72,115 +90,147 @@
             <form id="customerForm" onsubmit="saveCustomer(event)">
                 <div class="space-y-4">
                     <div>
-                        <label class="block mb-1 font-medium">اسم العميل *</label>
+                        <label class="block mb-2 font-medium">اسم العميل *</label>
                         <input type="text" id="customerName" required
-                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <label class="block mb-1 font-medium">رقم الهاتف</label>
+                        <label class="block mb-2 font-medium">رقم الهاتف</label>
                         <input type="tel" id="customerPhone"
-                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <label class="block mb-1 font-medium">البريد الإلكتروني</label>
+                        <label class="block mb-2 font-medium">البريد الإلكتروني</label>
                         <input type="email" id="customerEmail"
-                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <label class="block mb-1 font-medium">العنوان</label>
+                        <label class="block mb-2 font-medium">العنوان</label>
                         <textarea id="customerAddress" rows="3"
-                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
                     </div>
 
                     <div>
-                        <label class="block mb-1 font-medium">ملاحظات</label>
+                        <label class="block mb-2 font-medium">ملاحظات</label>
                         <textarea id="customerNotes" rows="2"
-                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"></textarea>
                     </div>
                 </div>
                 
                 <div class="flex justify-end space-x-2 space-x-reverse mt-6">
                     <button type="button" onclick="closeCustomerModal()" 
-                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">إلغاء</button>
+                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-all">إلغاء</button>
                     <button type="submit" 
-                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">حفظ</button>
+                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all">حفظ العميل</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
+        let customers = [];
+        let invoices = [];
         let editingCustomerId = null;
-        
-        // تهيئة التطبيق
-        SAWA_POS.init();
-        renderCustomersTable();
 
-        // عرض جدول العملاء
-        function renderCustomersTable(searchTerm = '') {
-            let filteredCustomers = window.appData.customers.filter(c => c.name !== 'عميل نقدي');
+        // تحميل البيانات
+        function loadData() {
+            const data = localStorage.getItem('sawaPOSData');
+            return data ? JSON.parse(data) : null;
+        }
+
+        // تنسيق العملة
+        function formatCurrency(amount) {
+            const data = loadData();
+            const currency = data?.settings?.currency || 'د.ع';
+            return new Intl.NumberFormat('ar-IQ').format(amount) + ' ' + currency;
+        }
+
+        // عرض العملاء
+        function displayCustomers() {
+            const data = loadData();
+            customers = data?.customers || [];
+            invoices = data?.invoices || [];
             
-            if (searchTerm) {
-                filteredCustomers = filteredCustomers.filter(customer => 
-                    customer.name.includes(searchTerm) || 
-                    customer.phone.includes(searchTerm) ||
-                    customer.email.includes(searchTerm)
-                );
-            }
-            
-            const customersHtml = filteredCustomers.map((customer, index) => {
-                const customerInvoices = window.appData.invoices.filter(inv => inv.customer === customer.name);
+            const searchTerm = document.getElementById('searchCustomers').value.toLowerCase();
+            const filteredCustomers = customers.filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm) ||
+                (customer.phone && customer.phone.includes(searchTerm)) ||
+                (customer.email && customer.email.toLowerCase().includes(searchTerm))
+            );
+
+            const tableBody = document.getElementById('customersTable');
+            tableBody.innerHTML = filteredCustomers.map((customer, index) => {
+                if (customer.name === 'عميل نقدي') return ''; // تخطي العميل النقدي
+                
+                const customerInvoices = invoices.filter(inv => inv.customer === customer.name);
                 const totalSpent = customerInvoices.reduce((sum, inv) => sum + inv.total, 0);
                 
                 return `
-                    <tr class="border-b border-white/10">
-                        <td class="py-3">${index + 1}</td>
-                        <td class="py-3 font-semibold">${customer.name}</td>
-                        <td class="py-3">${customer.phone || '-'}</td>
-                        <td class="py-3">${customer.email || '-'}</td>
-                        <td class="py-3">${customer.address || '-'}</td>
-                        <td class="py-3">${customerInvoices.length}</td>
-                        <td class="py-3">${SAWA_POS.formatCurrency(totalSpent)}</td>
-                        <td class="py-3">
-                            <button onclick="editCustomer(${customer.id})" 
-                                class="text-blue-400 hover:text-blue-600 mx-1">
-                                <i class="fa-solid fa-edit"></i>
-                            </button>
-                            <button onclick="viewCustomerDetails(${customer.id})" 
-                                class="text-green-400 hover:text-green-600 mx-1">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                            <button onclick="deleteCustomer(${customer.id})" 
-                                class="text-red-400 hover:text-red-600 mx-1">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                    <tr class="customer-row border-b border-white/10 transition-all">
+                        <td class="py-4 text-right">${index}</td>
+                        <td class="py-4">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold">${customer.name}</div>
+                                    ${customer.notes ? `<div class="text-white/70 text-xs">${customer.notes}</div>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 text-center">${customer.phone || '-'}</td>
+                        <td class="py-4 text-center">${customer.email || '-'}</td>
+                        <td class="py-4 text-center">
+                            <span class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs">
+                                ${customerInvoices.length}
+                            </span>
+                        </td>
+                        <td class="py-4 text-center font-semibold">${formatCurrency(totalSpent)}</td>
+                        <td class="py-4 text-center">
+                            <div class="flex justify-center space-x-2 space-x-reverse">
+                                <button onclick="editCustomer(${customer.id})" 
+                                    class="text-blue-400 hover:text-blue-300 transition-all" title="تعديل">
+                                    <i class="fa-solid fa-edit"></i>
+                                </button>
+                                <button onclick="viewCustomer(${customer.id})" 
+                                    class="text-green-400 hover:text-green-300 transition-all" title="عرض التفاصيل">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                <button onclick="deleteCustomer(${customer.id})" 
+                                    class="text-red-400 hover:text-red-300 transition-all" title="حذف">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
-            }).join('') || '<tr><td colspan="8" class="py-4 text-white/50">لا توجد عملاء</td></tr>';
-            
-            document.getElementById('customersTable').innerHTML = customersHtml;
-            document.getElementById('customersCount').textContent = filteredCustomers.length;
-            
-            // البحث عن العملاء
-            document.getElementById('customerSearch').addEventListener('input', function() {
-                renderCustomersTable(this.value);
-            });
+            }).join('') || `
+                <tr>
+                    <td colspan="7" class="py-8 text-center text-white/50">
+                        <i class="fa-solid fa-users text-3xl mb-2 block"></i>
+                        لا توجد عملاء
+                    </td>
+                </tr>
+            `;
+
+            document.getElementById('customersCount').textContent = filteredCustomers.length - 1; // ناقص العميل النقدي
+
+            // إضافة مستمع البحث
+            document.getElementById('searchCustomers').addEventListener('input', displayCustomers);
         }
 
-        // فتح نافذة إضافة عميل
+        // فتح نافذة العميل
         function openCustomerModal(customerId = null) {
             const modal = document.getElementById('customerModal');
             const title = document.getElementById('modalTitle');
             
             if (customerId) {
-                // وضع التعديل
                 title.textContent = 'تعديل بيانات العميل';
-                const customer = window.appData.customers.find(c => c.id === customerId);
+                const customer = customers.find(c => c.id === customerId);
                 
                 document.getElementById('customerName').value = customer.name;
                 document.getElementById('customerPhone').value = customer.phone || '';
@@ -190,7 +240,6 @@
                 
                 editingCustomerId = customerId;
             } else {
-                // وضع الإضافة
                 title.textContent = 'إضافة عميل جديد';
                 document.getElementById('customerForm').reset();
                 editingCustomerId = null;
@@ -216,25 +265,27 @@
                 notes: document.getElementById('customerNotes').value
             };
             
+            const data = loadData();
+            
             if (editingCustomerId) {
                 // تحديث عميل موجود
-                const customerIndex = window.appData.customers.findIndex(c => c.id === editingCustomerId);
+                const customerIndex = data.customers.findIndex(c => c.id === editingCustomerId);
                 if (customerIndex !== -1) {
-                    window.appData.customers[customerIndex] = { 
-                        ...window.appData.customers[customerIndex], 
+                    data.customers[customerIndex] = { 
+                        ...data.customers[customerIndex], 
                         ...customerData 
                     };
                 }
             } else {
                 // إضافة عميل جديد
-                const newId = SAWA_POS.generateId();
-                window.appData.customers.push({ id: newId, ...customerData });
+                const newId = Date.now();
+                data.customers.push({ id: newId, ...customerData });
             }
             
-            SAWA_POS.saveData();
+            localStorage.setItem('sawaPOSData', JSON.stringify(data));
             closeCustomerModal();
-            renderCustomersTable();
-            SAWA_POS.showNotification('تم حفظ بيانات العميل بنجاح!');
+            displayCustomers();
+            showNotification('تم حفظ بيانات العميل بنجاح!');
         }
 
         // تعديل العميل
@@ -243,39 +294,60 @@
         }
 
         // عرض تفاصيل العميل
-        function viewCustomerDetails(customerId) {
-            const customer = window.appData.customers.find(c => c.id === customerId);
-            const customerInvoices = window.appData.invoices.filter(inv => inv.customer === customer.name);
+        function viewCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            const customerInvoices = invoices.filter(inv => inv.customer === customer.name);
             const totalSpent = customerInvoices.reduce((sum, inv) => sum + inv.total, 0);
             
-            let details = `اسم العميل: ${customer.name}\n`;
-            details += `الهاتف: ${customer.phone || 'غير محدد'}\n`;
-            details += `البريد الإلكتروني: ${customer.email || 'غير محدد'}\n`;
-            details += `العنوان: ${customer.address || 'غير محدد'}\n`;
-            details += `عدد الفواتير: ${customerInvoices.length}\n`;
-            details += `إجمالي المشتريات: ${SAWA_POS.formatCurrency(totalSpent)}\n`;
-            details += `ملاحظات: ${customer.notes || 'لا توجد'}`;
+            let details = `👤 اسم العميل: ${customer.name}\n`;
+            details += `📞 الهاتف: ${customer.phone || 'غير محدد'}\n`;
+            details += `📧 البريد الإلكتروني: ${customer.email || 'غير محدد'}\n`;
+            details += `🏠 العنوان: ${customer.address || 'غير محدد'}\n`;
+            details += `🧾 عدد الفواتير: ${customerInvoices.length}\n`;
+            details += `💰 إجمالي المشتريات: ${formatCurrency(totalSpent)}\n`;
+            details += `📝 ملاحظات: ${customer.notes || 'لا توجد'}`;
             
             alert(details);
         }
 
         // حذف العميل
         function deleteCustomer(customerId) {
-            const customer = window.appData.customers.find(c => c.id === customerId);
-            const customerInvoices = window.appData.invoices.filter(inv => inv.customer === customer.name);
+            const customer = customers.find(c => c.id === customerId);
+            const customerInvoices = invoices.filter(inv => inv.customer === customer.name);
             
             if (customerInvoices.length > 0) {
-                alert('لا يمكن حذف العميل لأنه لديه فواتير مرتبطة به!');
+                showNotification('لا يمكن حذف العميل لأنه لديه فواتير مرتبطة به!', 'error');
                 return;
             }
             
             if (confirm('هل أنت متأكد من حذف هذا العميل؟')) {
-                window.appData.customers = window.appData.customers.filter(c => c.id !== customerId);
-                SAWA_POS.saveData();
-                renderCustomersTable();
-                SAWA_POS.showNotification('تم حذف العميل بنجاح!');
+                const data = loadData();
+                data.customers = data.customers.filter(c => c.id !== customerId);
+                localStorage.setItem('sawaPOSData', JSON.stringify(data));
+                displayCustomers();
+                showNotification('تم حذف العميل بنجاح!');
             }
         }
+
+        // إشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // تهيئة الصفحة
+        function initCustomers() {
+            displayCustomers();
+        }
+
+        // تشغيل عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initCustomers);
     </script>
 </body>
 </html>
