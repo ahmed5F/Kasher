@@ -21,6 +21,14 @@
     </style>
 </head>
 <body class="text-white">
+    <!-- التحقق من تسجيل الدخول -->
+    <script>
+        // التحقق من تسجيل الدخول
+        if (localStorage.getItem('sawaPOSLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+
     <!-- شريط التنقل العلوي -->
     <nav class="bg-white/10 backdrop-blur-md p-4 flex justify-between items-center">
         <div class="flex items-center">
@@ -34,7 +42,7 @@
                 <i class="fa-solid fa-user"></i>
                 <span id="usernameDisplay">مدير النظام</span>
             </div>
-            <button onclick="SAWA_POS.logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition">
+            <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition">
                 <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
             </button>
         </div>
@@ -161,24 +169,55 @@
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
-        // تهيئة التطبيق
-        SAWA_POS.init();
-        
-        // تحديث اسم المستخدم
-        const user = SAWA_POS.getCurrentUser();
-        if (user) {
-            document.getElementById('usernameDisplay').textContent = user.name;
+        // دالة تسجيل الخروج
+        function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                localStorage.removeItem('sawaPOSLoggedIn');
+                localStorage.removeItem('sawaPOSUser');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // دالة تحميل البيانات
+        function loadData() {
+            const savedData = localStorage.getItem('sawaPOSData');
+            return savedData ? JSON.parse(savedData) : null;
+        }
+
+        // تنسيق العملة
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('ar-IQ').format(amount) + ' د.ع';
+        }
+
+        // الساعة والتاريخ
+        function initClock() {
+            function updateDateTime() {
+                const now = new Date();
+                const time = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
+                const date = now.toLocaleDateString('ar-IQ', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                document.getElementById('clock').textContent = time;
+                document.getElementById('date').textContent = date;
+            }
+            
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
         }
 
         // تحديث الإحصائيات
         function updateDashboardStats() {
-            const data = window.appData;
+            const data = loadData();
+            if (!data) return;
             
             // إجمالي المبيعات
             const totalSales = data.invoices.reduce((sum, invoice) => sum + invoice.total, 0);
-            document.getElementById('totalSales').textContent = SAWA_POS.formatCurrency(totalSales);
+            document.getElementById('totalSales').textContent = formatCurrency(totalSales);
             
             // عدد العملاء
             document.getElementById('totalCustomers').textContent = data.customers.length;
@@ -198,7 +237,7 @@
                     <td class="py-3">${invoice.id}</td>
                     <td class="py-3">${invoice.date}</td>
                     <td class="py-3">${invoice.customer}</td>
-                    <td class="py-3">${SAWA_POS.formatCurrency(invoice.total)}</td>
+                    <td class="py-3">${formatCurrency(invoice.total)}</td>
                     <td class="py-3">
                         <span class="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">مكتمل</span>
                     </td>
@@ -208,8 +247,26 @@
             document.getElementById('recentInvoices').innerHTML = invoicesHtml;
         }
 
-        // تحديث الإحصائيات عند تحميل الصفحة
-        updateDashboardStats();
+        // تهيئة لوحة التحكم
+        function initDashboard() {
+            // عرض اسم المستخدم
+            const userData = localStorage.getItem('sawaPOSUser');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('usernameDisplay').textContent = user.name;
+            }
+            
+            // تحديث الإحصائيات
+            updateDashboardStats();
+            
+            // تشغيل الساعة
+            initClock();
+        }
+
+        // تشغيل لوحة التحكم عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboard();
+        });
     </script>
 </body>
 </html>
