@@ -8,103 +8,118 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="bg-white/20 backdrop-blur-md p-8 rounded-2xl shadow-xl w-[90%] max-w-md text-white text-center">
-        <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i class="fa-solid fa-store text-4xl"></i>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="welcome-card rounded-2xl p-8 text-white text-center w-full max-w-md">
+        <!-- الشعار -->
+        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fa-solid fa-cash-register text-3xl"></i>
         </div>
         
         <h1 class="text-3xl font-bold mb-2">Sawa POS</h1>
-        <p class="text-white/70 mb-8 text-lg">نظام إدارة المبيعات المتكامل</p>
+        <p class="text-white/80 mb-6">نظام إدارة المبيعات المتكامل</p>
 
-        <button onclick="enterSystem()" 
-            class="bg-green-500 hover:bg-green-600 w-full py-4 rounded-lg font-semibold transition duration-200 text-lg mb-4">
+        <!-- زر الدخول -->
+        <button onclick="startSystem()" 
+            class="bg-green-500 hover:bg-green-600 w-full py-4 rounded-lg font-semibold transition-all duration-300 text-lg mb-6 transform hover:scale-105">
             <i class="fa-solid fa-play ml-2"></i> بدء استخدام النظام
         </button>
 
-        <div class="grid grid-cols-2 gap-4 mt-6">
-            <div class="bg-white/10 p-4 rounded-lg">
-                <i class="fa-solid fa-cart-shopping text-2xl mb-2"></i>
-                <p class="text-sm">نقطة البيع</p>
+        <!-- الميزات -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-white/10 p-3 rounded-lg">
+                <i class="fa-solid fa-cart-shopping text-xl mb-1"></i>
+                <p class="text-xs">نقطة البيع</p>
             </div>
-            <div class="bg-white/10 p-4 rounded-lg">
-                <i class="fa-solid fa-box text-2xl mb-2"></i>
-                <p class="text-sm">إدارة المنتجات</p>
+            <div class="bg-white/10 p-3 rounded-lg">
+                <i class="fa-solid fa-box text-xl mb-1"></i>
+                <p class="text-xs">إدارة المنتجات</p>
             </div>
-            <div class="bg-white/10 p-4 rounded-lg">
-                <i class="fa-solid fa-users text-2xl mb-2"></i>
-                <p class="text-sm">إدارة العملاء</p>
+            <div class="bg-white/10 p-3 rounded-lg">
+                <i class="fa-solid fa-users text-xl mb-1"></i>
+                <p class="text-xs">إدارة العملاء</p>
             </div>
-            <div class="bg-white/10 p-4 rounded-lg">
-                <i class="fa-solid fa-chart-bar text-2xl mb-2"></i>
-                <p class="text-sm">التقارير</p>
+            <div class="bg-white/10 p-3 rounded-lg">
+                <i class="fa-solid fa-chart-bar text-xl mb-1"></i>
+                <p class="text-xs">التقارير</p>
             </div>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-white/20">
+        <!-- معلومات -->
+        <div class="border-t border-white/20 pt-4">
             <p class="text-sm text-white/70">بدون تسجيل دخول - جاهز للاستخدام الفوري</p>
         </div>
     </div>
 
     <script>
-        // تهيئة البيانات الافتراضية
-        function initializeData() {
-            if (!localStorage.getItem('sawaPOSData')) {
-                const defaultData = {
-                    products: [
-                        { id: 1, name: 'هاتف ذكي', category: 'إلكترونيات', price: 350000, stock: 15, cost: 300000 },
-                        { id: 2, name: 'لابتوب', category: 'إلكترونيات', price: 850000, stock: 8, cost: 700000 },
-                        { id: 3, name: 'قلم حبر', category: 'أدوات مكتبية', price: 2500, stock: 50, cost: 1500 },
-                        { id: 4, name: 'دفتر ملاحظات', category: 'أدوات مكتبية', price: 5000, stock: 30, cost: 3000 },
-                        { id: 5, name: 'قهوة', category: 'مشروبات', price: 10000, stock: 25, cost: 7000 },
-                        { id: 6, name: 'شاي', category: 'مشروبات', price: 7000, stock: 40, cost: 5000 }
-                    ],
-                    customers: [
-                        { id: 1, name: 'عميل نقدي', phone: '', email: '', address: '' },
-                        { id: 2, name: 'أحمد محمد', phone: '07701234567', email: 'ahmed@example.com', address: 'بغداد' },
-                        { id: 3, name: 'سارة علي', phone: '07707654321', email: 'sara@example.com', address: 'الكرادة' }
-                    ],
-                    invoices: [
-                        { 
-                            id: 1001, 
-                            date: new Date().toISOString().split('T')[0], 
-                            customer: 'أحمد محمد', 
-                            total: 355000, 
-                            subtotal: 350000,
-                            tax: 5000,
-                            items: [
-                                { id: 1, name: 'هاتف ذكي', price: 350000, quantity: 1 }
-                            ],
-                            paymentMethod: 'نقدي',
-                            user: 'النظام'
-                        }
-                    ],
-                    settings: {
-                        companyName: 'Sawa POS',
-                        taxRate: 10,
-                        currency: 'د.ع',
-                        companyPhone: '0770000000',
-                        companyAddress: 'بغداد، العراق'
+        // إنشاء البيانات الافتراضية
+        function createDefaultData() {
+            const defaultData = {
+                products: [
+                    { id: 1, name: 'هاتف ذكي', category: 'إلكترونيات', price: 350000, stock: 15, cost: 300000 },
+                    { id: 2, name: 'لابتوب', category: 'إلكترونيات', price: 850000, stock: 8, cost: 700000 },
+                    { id: 3, name: 'قلم حبر', category: 'أدوات مكتبية', price: 2500, stock: 50, cost: 1500 },
+                    { id: 4, name: 'دفتر ملاحظات', category: 'أدوات مكتبية', price: 5000, stock: 30, cost: 3000 },
+                    { id: 5, name: 'قهوة تركية', category: 'مشروبات', price: 10000, stock: 25, cost: 7000 },
+                    { id: 6, name: 'شاي إنجليزي', category: 'مشروبات', price: 7000, stock: 40, cost: 5000 }
+                ],
+                customers: [
+                    { id: 1, name: 'عميل نقدي', phone: '', email: '', address: '' },
+                    { id: 2, name: 'أحمد محمد', phone: '07701234567', email: 'ahmed@example.com', address: 'بغداد' },
+                    { id: 3, name: 'سارة علي', phone: '07707654321', email: 'sara@example.com', address: 'الكرادة' }
+                ],
+                invoices: [
+                    { 
+                        id: 1001, 
+                        date: '2024-01-15', 
+                        customer: 'أحمد محمد', 
+                        total: 355000, 
+                        subtotal: 350000,
+                        tax: 5000,
+                        items: [
+                            { id: 1, name: 'هاتف ذكي', price: 350000, quantity: 1 }
+                        ],
+                        paymentMethod: 'نقدي'
                     }
-                };
-                
-                localStorage.setItem('sawaPOSData', JSON.stringify(defaultData));
-            }
+                ],
+                settings: {
+                    companyName: 'Sawa POS',
+                    taxRate: 10,
+                    currency: 'د.ع',
+                    companyPhone: '0770000000',
+                    companyAddress: 'بغداد، العراق'
+                }
+            };
+            
+            localStorage.setItem('sawaPOSData', JSON.stringify(defaultData));
+            return defaultData;
         }
 
-        // الدخول إلى النظام
-        function enterSystem() {
-            initializeData();
+        // بدء النظام
+        function startSystem() {
+            // التأكد من وجود البيانات
+            if (!localStorage.getItem('sawaPOSData')) {
+                createDefaultData();
+            }
+            
+            // الانتقال للوحة التحكم
             window.location.href = 'dashboard.html';
         }
 
         // تهيئة البيانات عند تحميل الصفحة
-        initializeData();
+        if (!localStorage.getItem('sawaPOSData')) {
+            createDefaultData();
+        }
     </script>
 </body>
 </html>
