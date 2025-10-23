@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | Sawa POS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- شريط التنقل العلوي -->
+    <nav class="bg-white/10 backdrop-blur-md p-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <h1 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-store ml-2"></i> Sawa POS
+            </h1>
+        </div>
+        
+        <div class="flex items-center space-x-4 space-x-reverse">
+            <div class="flex items-center space-x-2 space-x-reverse bg-white/10 px-3 py-1 rounded-full">
+                <i class="fa-solid fa-user"></i>
+                <span id="usernameDisplay">مدير النظام</span>
+            </div>
+            <button onclick="SAWA_POS.logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition">
+                <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+            </button>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-bold mb-6">لوحة التحكم</h2>
+        
+        <!-- بطاقات الإحصائيات -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70">إجمالي المبيعات</p>
+                        <h3 class="text-2xl font-bold mt-2" id="totalSales">0 د.ع</h3>
+                    </div>
+                    <div class="bg-green-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-money-bill-wave text-green-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70">عدد العملاء</p>
+                        <h3 class="text-2xl font-bold mt-2" id="totalCustomers">0</h3>
+                    </div>
+                    <div class="bg-blue-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-users text-blue-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70">المنتجات</p>
+                        <h3 class="text-2xl font-bold mt-2" id="totalProducts">0</h3>
+                    </div>
+                    <div class="bg-purple-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-box text-purple-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-white/70">الفواتير اليوم</p>
+                        <h3 class="text-2xl font-bold mt-2" id="todayInvoices">0</h3>
+                    </div>
+                    <div class="bg-yellow-500/20 p-3 rounded-full">
+                        <i class="fa-solid fa-receipt text-yellow-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- روابط سريعة -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+            <a href="pos.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
+                <i class="fa-solid fa-cart-shopping text-3xl mb-3"></i>
+                <h3 class="font-semibold">نقطة البيع</h3>
+                <p class="text-sm text-white/80 mt-1">واجهة البيع السريع</p>
+            </a>
+
+            <a href="products.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
+                <i class="fa-solid fa-box-open text-3xl mb-3"></i>
+                <h3 class="font-semibold">المنتجات</h3>
+                <p class="text-sm text-white/80 mt-1">إدارة المخزون</p>
+            </a>
+
+            <a href="customers.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
+                <i class="fa-solid fa-users text-3xl mb-3"></i>
+                <h3 class="font-semibold">العملاء</h3>
+                <p class="text-sm text-white/80 mt-1">إدارة بيانات العملاء</p>
+            </a>
+
+            <a href="invoices.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
+                <i class="fa-solid fa-file-invoice text-3xl mb-3"></i>
+                <h3 class="font-semibold">الفواتير</h3>
+                <p class="text-sm text-white/80 mt-1">سجل الفواتير</p>
+            </a>
+
+            <a href="reports.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
+                <i class="fa-solid fa-chart-bar text-3xl mb-3"></i>
+                <h3 class="font-semibold">التقارير</h3>
+                <p class="text-sm text-white/80 mt-1">تقارير المبيعات</p>
+            </a>
+
+            <a href="settings.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
+                <i class="fa-solid fa-gear text-3xl mb-3"></i>
+                <h3 class="font-semibold">الإعدادات</h3>
+                <p class="text-sm text-white/80 mt-1">إعدادات النظام</p>
+            </a>
+        </div>
+
+        <!-- أحدث الفواتير -->
+        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
+            <h3 class="text-xl font-bold mb-4">أحدث الفواتير</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-center">
+                    <thead>
+                        <tr class="border-b border-white/20">
+                            <th class="pb-3">رقم الفاتورة</th>
+                            <th class="pb-3">التاريخ</th>
+                            <th class="pb-3">العميل</th>
+                            <th class="pb-3">المبلغ</th>
+                            <th class="pb-3">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentInvoices">
+                        <!-- سيتم ملؤها بالبيانات -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- الوقت والتاريخ -->
+        <div class="text-center mt-8 space-y-2">
+            <div id="clock" class="text-2xl font-bold"></div>
+            <div id="date" class="text-white/70"></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // تهيئة التطبيق
+        SAWA_POS.init();
+        
+        // تحديث اسم المستخدم
+        const user = SAWA_POS.getCurrentUser();
+        if (user) {
+            document.getElementById('usernameDisplay').textContent = user.name;
+        }
+
+        // تحديث الإحصائيات
+        function updateDashboardStats() {
+            const data = window.appData;
+            
+            // إجمالي المبيعات
+            const totalSales = data.invoices.reduce((sum, invoice) => sum + invoice.total, 0);
+            document.getElementById('totalSales').textContent = SAWA_POS.formatCurrency(totalSales);
+            
+            // عدد العملاء
+            document.getElementById('totalCustomers').textContent = data.customers.length;
+            
+            // عدد المنتجات
+            document.getElementById('totalProducts').textContent = data.products.length;
+            
+            // عدد الفواتير اليوم
+            const today = new Date().toISOString().split('T')[0];
+            const todayInvoices = data.invoices.filter(invoice => invoice.date === today).length;
+            document.getElementById('todayInvoices').textContent = todayInvoices;
+            
+            // أحدث الفواتير
+            const recentInvoices = data.invoices.slice(-5).reverse();
+            const invoicesHtml = recentInvoices.map(invoice => `
+                <tr class="border-b border-white/10">
+                    <td class="py-3">${invoice.id}</td>
+                    <td class="py-3">${invoice.date}</td>
+                    <td class="py-3">${invoice.customer}</td>
+                    <td class="py-3">${SAWA_POS.formatCurrency(invoice.total)}</td>
+                    <td class="py-3">
+                        <span class="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">مكتمل</span>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" class="py-4 text-white/50">لا توجد فواتير</td></tr>';
+            
+            document.getElementById('recentInvoices').innerHTML = invoicesHtml;
+        }
+
+        // تحديث الإحصائيات عند تحميل الصفحة
+        updateDashboardStats();
+    </script>
+</body>
+</html>
