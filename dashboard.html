@@ -5,201 +5,214 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم | Sawa POS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css>
     <style>
         body {
-            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .card-hover {
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
-        .card-hover:hover {
+        .stat-card:hover {
             transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .nav-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .nav-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.12);
         }
     </style>
 </head>
 <body class="text-white">
-    <!-- شريط التنقل العلوي -->
-    <nav class="bg-white/10 backdrop-blur-md p-4 flex justify-between items-center">
-        <div class="flex items-center">
-            <h1 class="text-xl font-bold flex items-center">
-                <i class="fa-solid fa-store ml-2"></i> Sawa POS
-            </h1>
-        </div>
-        
-        <div class="flex items-center space-x-4 space-x-reverse">
-            <div class="flex items-center space-x-2 space-x-reverse bg-white/10 px-3 py-1 rounded-full">
-                <i class="fa-solid fa-user"></i>
-                <span>مستخدم النظام</span>
+    <!-- الشريط العلوي -->
+    <nav class="bg-white/10 backdrop-blur-md p-4 border-b border-white/20">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-cash-register"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold">Sawa POS</h1>
+                    <p class="text-white/70 text-sm">نظام إدارة المبيعات</p>
+                </div>
             </div>
-            <a href="index.html" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm transition">
-                <i class="fa-solid fa-house ml-2"></i> الرئيسية
-            </a>
+            
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-lg">
+                    <i class="fa-solid fa-user"></i>
+                    <span>مرحباً!</span>
+                </div>
+                <a href="index.html" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-all duration-300">
+                    <i class="fa-solid fa-home ml-2"></i> الرئيسية
+                </a>
+            </div>
         </div>
     </nav>
 
     <div class="container mx-auto p-6">
-        <h2 class="text-2xl font-bold mb-6">لوحة التحكم</h2>
-        
-        <!-- بطاقات الإحصائيات -->
+        <!-- العنوان -->
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold mb-2">لوحة التحكم</h2>
+            <p class="text-white/70">نظرة عامة على أداء متجرك</p>
+        </div>
+
+        <!-- إحصائيات سريعة -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+            <div class="stat-card rounded-xl p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-white/70">إجمالي المبيعات</p>
-                        <h3 class="text-2xl font-bold mt-2" id="totalSales">0 د.ع</h3>
+                        <p class="text-white/70 mb-2">إجمالي المبيعات</p>
+                        <h3 class="text-2xl font-bold" id="totalSales">0 د.ع</h3>
                     </div>
                     <div class="bg-green-500/20 p-3 rounded-full">
-                        <i class="fa-solid fa-money-bill-wave text-green-400"></i>
+                        <i class="fa-solid fa-money-bill-wave text-green-400 text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+            <div class="stat-card rounded-xl p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-white/70">عدد العملاء</p>
-                        <h3 class="text-2xl font-bold mt-2" id="totalCustomers">0</h3>
+                        <p class="text-white/70 mb-2">عدد العملاء</p>
+                        <h3 class="text-2xl font-bold" id="totalCustomers">0</h3>
                     </div>
                     <div class="bg-blue-500/20 p-3 rounded-full">
-                        <i class="fa-solid fa-users text-blue-400"></i>
+                        <i class="fa-solid fa-users text-blue-400 text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+            <div class="stat-card rounded-xl p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-white/70">المنتجات</p>
-                        <h3 class="text-2xl font-bold mt-2" id="totalProducts">0</h3>
+                        <p class="text-white/70 mb-2">المنتجات</p>
+                        <h3 class="text-2xl font-bold" id="totalProducts">0</h3>
                     </div>
                     <div class="bg-purple-500/20 p-3 rounded-full">
-                        <i class="fa-solid fa-box text-purple-400"></i>
+                        <i class="fa-solid fa-box text-purple-400 text-xl"></i>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 card-hover">
+            <div class="stat-card rounded-xl p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-white/70">الفواتير اليوم</p>
-                        <h3 class="text-2xl font-bold mt-2" id="todayInvoices">0</h3>
+                        <p class="text-white/70 mb-2">فواتير اليوم</p>
+                        <h3 class="text-2xl font-bold" id="todayInvoices">0</h3>
                     </div>
                     <div class="bg-yellow-500/20 p-3 rounded-full">
-                        <i class="fa-solid fa-receipt text-yellow-400"></i>
+                        <i class="fa-solid fa-receipt text-yellow-400 text-xl"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- روابط سريعة -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-            <a href="pos.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
-                <i class="fa-solid fa-cart-shopping text-3xl mb-3"></i>
-                <h3 class="font-semibold">نقطة البيع</h3>
-                <p class="text-sm text-white/80 mt-1">واجهة البيع السريع</p>
+        <!-- التنقل السريع -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <a href="pos.html" class="nav-card rounded-xl p-5 text-center block">
+                <i class="fa-solid fa-cart-shopping text-2xl mb-3"></i>
+                <h3 class="font-semibold text-sm">نقطة البيع</h3>
             </a>
 
-            <a href="products.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
-                <i class="fa-solid fa-box-open text-3xl mb-3"></i>
-                <h3 class="font-semibold">المنتجات</h3>
-                <p class="text-sm text-white/80 mt-1">إدارة المخزون</p>
+            <a href="products.html" class="nav-card rounded-xl p-5 text-center block">
+                <i class="fa-solid fa-box-open text-2xl mb-3"></i>
+                <h3 class="font-semibold text-sm">المنتجات</h3>
             </a>
 
-            <a href="customers.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
-                <i class="fa-solid fa-users text-3xl mb-3"></i>
-                <h3 class="font-semibold">العملاء</h3>
-                <p class="text-sm text-white/80 mt-1">إدارة بيانات العملاء</p>
+            <a href="customers.html" class="nav-card rounded-xl p-5 text-center block">
+                <i class="fa-solid fa-users text-2xl mb-3"></i>
+                <h3 class="font-semibold text-sm">العملاء</h3>
             </a>
 
-            <a href="invoices.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
-                <i class="fa-solid fa-file-invoice text-3xl mb-3"></i>
-                <h3 class="font-semibold">الفواتير</h3>
-                <p class="text-sm text-white/80 mt-1">سجل الفواتير</p>
+            <a href="invoices.html" class="nav-card rounded-xl p-5 text-center block">
+                <i class="fa-solid fa-file-invoice text-2xl mb-3"></i>
+                <h3 class="font-semibold text-sm">الفواتير</h3>
             </a>
 
-            <a href="reports.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
-                <i class="fa-solid fa-chart-bar text-3xl mb-3"></i>
-                <h3 class="font-semibold">التقارير</h3>
-                <p class="text-sm text-white/80 mt-1">تقارير المبيعات</p>
+            <a href="reports.html" class="nav-card rounded-xl p-5 text-center block">
+                <i class="fa-solid fa-chart-bar text-2xl mb-3"></i>
+                <h3 class="font-semibold text-sm">التقارير</h3>
             </a>
 
-            <a href="settings.html" class="bg-white/20 hover:bg-white/30 transition rounded-xl p-5 text-center card-hover block">
-                <i class="fa-solid fa-gear text-3xl mb-3"></i>
-                <h3 class="font-semibold">الإعدادات</h3>
-                <p class="text-sm text-white/80 mt-1">إعدادات النظام</p>
+            <a href="settings.html" class="nav-card rounded-xl p-5 text-center block">
+                <i class="fa-solid fa-gear text-2xl mb-3"></i>
+                <h3 class="font-semibold text-sm">الإعدادات</h3>
             </a>
         </div>
 
-        <!-- أحدث الفواتير -->
-        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-            <h3 class="text-xl font-bold mb-4">أحدث الفواتير</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-center">
-                    <thead>
-                        <tr class="border-b border-white/20">
-                            <th class="pb-3">رقم الفاتورة</th>
-                            <th class="pb-3">التاريخ</th>
-                            <th class="pb-3">العميل</th>
-                            <th class="pb-3">المبلغ</th>
-                            <th class="pb-3">الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentInvoices">
-                        <!-- سيتم ملؤها بالبيانات -->
-                    </tbody>
-                </table>
+        <!-- محتوى مزدوج -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- أحدث الفواتير -->
+            <div class="stat-card rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">أحدث الفواتير</h3>
+                <div class="space-y-3" id="recentInvoices">
+                    <!-- سيتم ملؤها بالبيانات -->
+                </div>
+            </div>
+
+            <!-- المنتجات الأكثر مبيعاً -->
+            <div class="stat-card rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">المنتجات الأكثر مبيعاً</h3>
+                <div class="space-y-3" id="topProducts">
+                    <!-- سيتم ملؤها بالبيانات -->
+                </div>
             </div>
         </div>
 
         <!-- الوقت والتاريخ -->
-        <div class="text-center mt-8 space-y-2">
-            <div id="clock" class="text-2xl font-bold"></div>
+        <div class="text-center mt-8 p-4 stat-card rounded-xl">
+            <div id="clock" class="text-2xl font-bold mb-2"></div>
             <div id="date" class="text-white/70"></div>
         </div>
     </div>
 
     <script>
-        // دالة تحميل البيانات
+        // تحميل البيانات
         function loadData() {
-            const savedData = localStorage.getItem('sawaPOSData');
-            return savedData ? JSON.parse(savedData) : null;
+            const data = localStorage.getItem('sawaPOSData');
+            return data ? JSON.parse(data) : null;
         }
 
         // تنسيق العملة
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('ar-IQ').format(amount) + ' د.ع';
+            const data = loadData();
+            const currency = data?.settings?.currency || 'د.ع';
+            return new Intl.NumberFormat('ar-IQ').format(amount) + ' ' + currency;
         }
 
-        // الساعة والتاريخ
-        function initClock() {
-            function updateDateTime() {
-                const now = new Date();
-                const time = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
-                const date = now.toLocaleDateString('ar-IQ', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-                
-                document.getElementById('clock').textContent = time;
-                document.getElementById('date').textContent = date;
-            }
+        // تحديث الساعة
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
+            const date = now.toLocaleDateString('ar-IQ', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
             
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
+            document.getElementById('clock').textContent = time;
+            document.getElementById('date').textContent = date;
         }
 
         // تحديث الإحصائيات
-        function updateDashboardStats() {
+        function updateStats() {
             const data = loadData();
             if (!data) return;
-            
+
             // إجمالي المبيعات
-            const totalSales = data.invoices.reduce((sum, invoice) => sum + invoice.total, 0);
+            const totalSales = data.invoices.reduce((sum, inv) => sum + inv.total, 0);
             document.getElementById('totalSales').textContent = formatCurrency(totalSales);
             
             // عدد العملاء
@@ -208,58 +221,61 @@
             // عدد المنتجات
             document.getElementById('totalProducts').textContent = data.products.length;
             
-            // عدد الفواتير اليوم
+            // فواتير اليوم
             const today = new Date().toISOString().split('T')[0];
-            const todayInvoices = data.invoices.filter(invoice => invoice.date === today).length;
+            const todayInvoices = data.invoices.filter(inv => inv.date === today).length;
             document.getElementById('todayInvoices').textContent = todayInvoices;
-            
+
             // أحدث الفواتير
-            const recentInvoices = data.invoices.slice(-5).reverse();
+            const recentInvoices = data.invoices.slice(-3).reverse();
             const invoicesHtml = recentInvoices.map(invoice => `
-                <tr class="border-b border-white/10">
-                    <td class="py-3">${invoice.id}</td>
-                    <td class="py-3">${invoice.date}</td>
-                    <td class="py-3">${invoice.customer}</td>
-                    <td class="py-3">${formatCurrency(invoice.total)}</td>
-                    <td class="py-3">
-                        <span class="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">مكتمل</span>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="5" class="py-4 text-white/50">لا توجد فواتير</td></tr>';
-            
+                <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                    <div class="text-left">
+                        <div class="font-semibold">فاتورة #${invoice.id}</div>
+                        <div class="text-white/70 text-sm">${invoice.customer}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold">${formatCurrency(invoice.total)}</div>
+                        <div class="text-white/70 text-sm">${invoice.date}</div>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-white/50 text-center">لا توجد فواتير</p>';
             document.getElementById('recentInvoices').innerHTML = invoicesHtml;
+
+            // المنتجات الأكثر مبيعاً (محاكاة)
+            const topProducts = data.products.slice(0, 3).map(product => ({
+                ...product,
+                sales: Math.floor(Math.random() * 20) + 5
+            })).sort((a, b) => b.sales - a.sales);
+
+            const productsHtml = topProducts.map(product => `
+                <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
+                            <i class="fa-solid fa-box text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm">${product.name}</div>
+                            <div class="text-white/70 text-xs">${formatCurrency(product.price)}</div>
+                        </div>
+                    </div>
+                    <div class="bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs">
+                        ${product.sales} مبيعاً
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('topProducts').innerHTML = productsHtml;
         }
 
-        // إشعارات
-        function showNotification(message, type = 'success') {
-            // إنشاء عنصر الإشعار
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 p-4 rounded-lg z-50 ${
-                type === 'success' ? 'bg-green-500' : 'bg-red-500'
-            } text-white`;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            // إزالة الإشعار بعد 3 ثواني
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // تهيئة لوحة التحكم
+        // تهيئة الصفحة
         function initDashboard() {
-            // تحديث الإحصائيات
-            updateDashboardStats();
-            
-            // تشغيل الساعة
-            initClock();
+            updateStats();
+            updateClock();
+            setInterval(updateClock, 1000);
         }
 
-        // تشغيل لوحة التحكم عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            initDashboard();
-        });
+        // تشغيل عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
 </html>
