@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات | Sawa POS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body class="text-white p-6">
+    <!-- شريط التنقل -->
+    <nav class="bg-white/10 backdrop-blur-md p-4 rounded-xl mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4 space-x-reverse">
+            <a href="dashboard.html" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+                <i class="fa-solid fa-arrow-right ml-2"></i> العودة
+            </a>
+            <h1 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-gear ml-2"></i> إعدادات النظام
+            </h1>
+        </div>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- القائمة الجانبية -->
+        <div class="lg:col-span-1">
+            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
+                <nav class="space-y-2">
+                    <button onclick="showSection('company')" class="settings-nav w-full text-right p-3 rounded-lg bg-white/20 hover:bg-white/30 transition active">
+                        <i class="fa-solid fa-building ml-2"></i> معلومات الشركة
+                    </button>
+                    <button onclick="showSection('sales')" class="settings-nav w-full text-right p-3 rounded-lg hover:bg-white/30 transition">
+                        <i class="fa-solid fa-cash-register ml-2"></i> إعدادات المبيعات
+                    </button>
+                    <button onclick="showSection('users')" class="settings-nav w-full text-right p-3 rounded-lg hover:bg-white/30 transition">
+                        <i class="fa-solid fa-users ml-2"></i> إدارة المستخدمين
+                    </button>
+                    <button onclick="showSection('backup')" class="settings-nav w-full text-right p-3 rounded-lg hover:bg-white/30 transition">
+                        <i class="fa-solid fa-database ml-2"></i> النسخ الاحتياطي
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- المحتوى -->
+        <div class="lg:col-span-2">
+            <!-- إعدادات الشركة -->
+            <div id="company" class="settings-section bg-white/20 backdrop-blur-md rounded-xl p-5">
+                <h2 class="text-2xl font-bold mb-4">معلومات الشركة</h2>
+                
+                <form id="companyForm" onsubmit="saveCompanySettings(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block mb-2 font-medium">اسم الشركة</label>
+                            <input type="text" id="companyName" required
+                                class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 font-medium">الشعار (رابط URL)</label>
+                            <input type="url" id="companyLogo"
+                                class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 font-medium">العنوان</label>
+                            <textarea id="companyAddress" rows="3"
+                                class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block mb-2 font-medium">الهاتف</label>
+                                <input type="tel" id="companyPhone"
+                                    class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                            </div>
+                            
+                            <div>
+                                <label class="block mb-2 font-medium">البريد الإلكتروني</label>
+                                <input type="email" id="companyEmail"
+                                    class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 font-medium">السجل التجاري</label>
+                            <input type="text" id="companyCommercialNo"
+                                class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition mt-6">
+                        <i class="fa-solid fa-save ml-2"></i> حفظ الإعدادات
+                    </button>
+                </form>
+            </div>
+
+            <!-- إعدادات المبيعات -->
+            <div id="sales" class="settings-section bg-white/20 backdrop-blur-md rounded-xl p-5 hidden">
+                <h2 class="text-2xl font-bold mb-4">إعدادات المبيعات</h2>
+                
+                <form id="salesForm" onsubmit="saveSalesSettings(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block mb-2 font-medium">نسبة الضريبة (%)</label>
+                            <input type="number" id="taxRate" step="0.1" min="0" max="100" required
+                                class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 font-medium">العملة</label>
+                            <select id="currency" class="w-full px-4 py-2 rounded-lg bg-white/30 text-white focus:outline-none focus:ring-2 focus:ring-white/50">
+                                <option value="د.ع">دينار عراقي (د.ع)</option>
+                                <option value="$">دولار ($)</option>
+                                <option value="€">يورو (€)</option>
+                                <option value="ريال">ريال سعودي</option>
+                                <option value="د.إ">درهم إماراتي (د.إ)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-white/10 rounded-lg">
+                            <div>
+                                <label class="font-medium">الباركود</label>
+                                <p class="text-sm text-white/70">تفعيل مسح الباركود للمنتجات</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="barcodeEnabled" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-white/10 rounded-lg">
+                            <div>
+                                <label class="font-medium">الإشعارات</label>
+                                <p class="text-sm text-white/70">عرض إشعارات عند انخفاض المخزون</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="lowStockAlert" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <label class="block mb-2 font-medium">حد التنبيه للمخزون المنخفض</label>
+                            <input type="number" id="lowStockThreshold" min="1" required
+                                class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition mt-6">
+                        <i class="fa-solid fa-save ml-2"></i> حفظ الإعدادات
+                    </button>
+                </form>
+            </div>
+
+            <!-- إدارة المستخدمين -->
+            <div id="users" class="settings-section bg-white/20 backdrop-blur-md rounded-xl p-5 hidden">
+                <h2 class="text-2xl font-bold mb-4">إدارة المستخدمين</h2>
+                
+                <div class="mb-6">
+                    <button onclick="openUserModal()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-semibold transition">
+                        <i class="fa-solid fa-plus ml-2"></i> إضافة مستخدم
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-center">
+                        <thead>
+                            <tr class="border-b border-white/20">
+                                <th class="pb-3">اسم المستخدم</th>
+                                <th class="pb-3">الاسم الكامل</th>
+                                <th class="pb-3">الدور</th>
+                                <th class="pb-3">الحالة</th>
+                                <th class="pb-3">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <!-- سيتم ملؤها بالمستخدمين -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- النسخ الاحتياطي -->
+            <div id="backup" class="settings-section bg-white/20 backdrop-blur-md rounded-xl p-5 hidden">
+                <h2 class="text-2xl font-bold mb-4">النسخ الاحتياطي</h2>
+                
+                <div class="space-y-6">
+                    <div class="p-4 bg-white/10 rounded-lg">
+                        <h3 class="font-bold mb-2">تصدير البيانات</h3>
+                        <p class="text-white/70 mb-3">قم بإنشاء نسخة احتياطية من جميع بيانات النظام</p>
+                        <button onclick="exportData()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold transition">
+                            <i class="fa-solid fa-download ml-2"></i> تصدير البيانات
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-white/10 rounded-lg">
+                        <h3 class="font-bold mb-2">استيراد البيانات</h3>
+                        <p class="text-white/70 mb-3">استعادة البيانات من نسخة احتياطية سابقة</p>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <input type="file" id="backupFile" accept=".json" class="flex-1 px-3 py-2 rounded-lg bg-white/30 text-white">
+                            <button onclick="importData()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-semibold transition">
+                                <i class="fa-solid fa-upload ml-2"></i> استيراد
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-red-500/20 rounded-lg border border-red-500/30">
+                        <h3 class="font-bold mb-2 text-red-300">منطقة الخطر</h3>
+                        <p class="text-red-300/70 mb-3">هذه الإجراءات لا يمكن التراجع عنها</p>
+                        <div class="space-y-2">
+                            <button onclick="clearAllData()" class="w-full bg-red-500 hover:bg-red-600 px-4 py-3 rounded-lg font-semibold transition">
+                                <i class="fa-solid fa-trash ml-2"></i> حذف جميع البيانات
+                            </button>
+                            <button onclick="resetToDefault()" class="w-full bg-red-700 hover:bg-red-800 px-4 py-3 rounded-lg font-semibold transition">
+                                <i class="fa-solid fa-rotate-left ml-2"></i> إعادة تعيين المصنع
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة/تعديل مستخدم -->
+    <div id="userModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white text-gray-800 rounded-xl w-full max-w-md mx-4 p-6">
+            <h3 class="text-xl font-bold mb-4" id="userModalTitle">إضافة مستخدم جديد</h3>
+            
+            <form id="userForm" onsubmit="saveUser(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-1 font-medium">اسم المستخدم *</label>
+                        <input type="text" id="userUsername" required
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-1 font-medium">كلمة المرور *</label>
+                        <input type="password" id="userPassword" required
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-1 font-medium">الاسم الكامل *</label>
+                        <input type="text" id="userFullName" required
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block mb-1 font-medium">الدور *</label>
+                        <select id="userRole" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="admin">مدير النظام</option>
+                            <option value="cashier">كاشير</option>
+                            <option value="viewer">مشاهد</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-2 space-x-reverse mt-6">
+                    <button type="button" onclick="closeUserModal()" 
+                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">إلغاء</button>
+                    <button type="submit" 
+                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let editingUserId = null;
+        
+        // تهيئة التطبيق
+        SAWA_POS.init();
+        loadSettings();
+        renderUsersTable();
+
+        // تحميل الإعدادات
+        function loadSettings() {
+            const settings = window.appData.settings;
+            
+            // إعدادات الشركة
+            document.getElementById('companyName').value = settings.companyName || '';
+            document.getElementById('companyLogo').value = settings.logo || '';
+            document.getElementById('companyAddress').value = settings.address || '';
+            document.getElementById('companyPhone').value = settings.phone || '';
+            document.getElementById('companyEmail').value = settings.email || '';
+            document.getElementById('companyCommercialNo').value = settings.commercialNo || '';
+            
+            // إعدادات المبيعات
+            document.getElementById('taxRate').value = settings.taxRate || 10;
+            document.getElementById('currency').value = settings.currency || 'د.ع';
+            document.getElementById('barcodeEnabled').checked = settings.barcodeEnabled || false;
+            document.getElementById('lowStockAlert').checked = settings.lowStockAlert || false;
+            document.getElementById('lowStockThreshold').value = settings.lowStockThreshold || 5;
+        }
+
+        // عرض الأقسام
+        function showSection(sectionId) {
+            // إخفاء جميع الأقسام
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // إزالة النشاط من جميع الأزرار
+            document.querySelectorAll('.settings-nav').forEach(btn => {
+                btn.classList.remove('active', 'bg-white/20');
+            });
+            
+            // إظهار القسم المحدد
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // تفعيل الزر المحدد
+            event.target.classList.add('active', 'bg-white/20');
+        }
+
+        // حفظ إعدادات الشركة
+        function saveCompanySettings(event) {
+            event.preventDefault();
+            
+            window.appData.settings = {
+                ...window.appData.settings,
+                companyName: document.getElementById('companyName').value,
+                logo: document.getElementById('companyLogo').value,
+                address: document.getElementById('companyAddress').value,
+                phone: document.getElementById('companyPhone').value,
+                email: document.getElementById('companyEmail').value,
+                commercialNo: document.getElementById('companyCommercialNo').value
+            };
+            
+            SAWA_POS.saveData();
+            SAWA_POS.showNotification('تم حفظ إعدادات الشركة بنجاح!');
+        }
+
+        // حفظ إعدادات المبيعات
+        function saveSalesSettings(event) {
+            event.preventDefault();
+            
+            window.appData.settings = {
+                ...window.appData.settings,
+                taxRate: parseFloat(document.getElementById('taxRate').value),
+                currency: document.getElementById('currency').value,
+                barcodeEnabled: document.getElementById('barcodeEnabled').checked,
+                lowStockAlert: document.getElementById('lowStockAlert').checked,
+                lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value)
+            };
+            
+            SAWA_POS.saveData();
+            SAWA_POS.showNotification('تم حفظ إعدادات المبيعات بنجاح!');
+        }
+
+        // عرض جدول المستخدمين
+        function renderUsersTable() {
+            const usersHtml = window.appData.users.map(user => `
+                <tr class="border-b border-white/10">
+                    <td class="py-3">${user.username}</td>
+                    <td class="py-3">${user.name}</td>
+                    <td class="py-3">
+                        <span class="px-2 py-1 rounded-full text-xs ${
+                            user.role === 'admin' ? 'bg-purple-500/20 text-purple-300' :
+                            user.role === 'cashier' ? 'bg-blue-500/20 text-blue-300' :
+                            'bg-green-500/20 text-green-300'
+                        }">
+                            ${user.role === 'admin' ? 'مدير النظام' : 
+                              user.role === 'cashier' ? 'كاشير' : 'مشاهد'}
+                        </span>
+                    </td>
+                    <td class="py-3">
+                        <span class="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">نشط</span>
+                    </td>
+                    <td class="py-3">
+                        <button onclick="editUser(${user.id})" 
+                            class="text-blue-400 hover:text-blue-600 mx-1">
+                            <i class="fa-solid fa-edit"></i>
+                        </button>
+                        ${user.username !== 'admin' ? `
+                            <button onclick="deleteUser(${user.id})" 
+                                class="text-red-400 hover:text-red-600 mx-1">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('usersTable').innerHTML = usersHtml;
+        }
+
+        // فتح نافذة المستخدم
+        function openUserModal(userId = null) {
+            const modal = document.getElementById('userModal');
+            const title = document.getElementById('userModalTitle');
+            
+            if (userId) {
+                // وضع التعديل
+                title.textContent = 'تعديل المستخدم';
+                const user = window.appData.users.find(u => u.id === userId);
+                
+                document.getElementById('userUsername').value = user.username;
+                document.getElementById('userPassword').value = user.password;
+                document.getElementById('userFullName').value = user.name;
+                document.getElementById('userRole').value = user.role;
+                
+                editingUserId = userId;
+            } else {
+                // وضع الإضافة
+                title.textContent = 'إضافة مستخدم جديد';
+                document.getElementById('userForm').reset();
+                editingUserId = null;
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        // إغلاق نافذة المستخدم
+        function closeUserModal() {
+            document.getElementById('userModal').classList.add('hidden');
+        }
+
+        // حفظ المستخدم
+        function saveUser(event) {
+            event.preventDefault();
+            
+            const userData = {
+                username: document.getElementById('userUsername').value,
+                password: document.getElementById('userPassword').value,
+                name: document.getElementById('userFullName').value,
+                role: document.getElementById('userRole').value
+            };
+            
+            if (editingUserId) {
+                // تحديث مستخدم موجود
+                const userIndex = window.appData.users.findIndex(u => u.id === editingUserId);
+                if (userIndex !== -1) {
+                    window.appData.users[userIndex] = { 
+                        ...window.appData.users[userIndex], 
+                        ...userData 
+                    };
+                }
+            } else {
+                // إضافة مستخدم جديد
+                const newId = SAWA_POS.generateId();
+                window.appData.users.push({ id: newId, ...userData });
+            }
+            
+            SAWA_POS.saveData();
+            closeUserModal();
+            renderUsersTable();
+            SAWA_POS.showNotification('تم حفظ المستخدم بنجاح!');
+        }
+
+        // تعديل المستخدم
+        function editUser(userId) {
+            openUserModal(userId);
+        }
+
+        // حذف المستخدم
+        function deleteUser(userId) {
+            if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+                window.appData.users = window.appData.users.filter(u => u.id !== userId);
+                SAWA_POS.saveData();
+                renderUsersTable();
+                SAWA_POS.showNotification('تم حذف المستخدم بنجاح!');
+            }
+        }
+
+        // تصدير البيانات
+        function exportData() {
+            const dataStr = JSON.stringify(window.appData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `sawa-pos-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            SAWA_POS.showNotification('تم تصدير البيانات بنجاح!');
+        }
+
+        // استيراد البيانات
+        function importData() {
+            const fileInput = document.getElementById('backupFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('يرجى اختيار ملف النسخ الاحتياطي');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    window.appData = importedData;
+                    SAWA_POS.saveData();
+                    loadSettings();
+                    renderUsersTable();
+                    SAWA_POS.showNotification('تم استيراد البيانات بنجاح!');
+                    fileInput.value = '';
+                } catch (error) {
+                    alert('خطأ في تحميل الملف. يرجى التأكد من صحة الملف.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // حذف جميع البيانات
+        function clearAllData() {
+            if (confirm('هل أنت متأكد من حذف جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه!')) {
+                window.appData = {
+                    products: [],
+                    customers: [{ id: 1, name: 'عميل نقدي', phone: '', email: '', address: '' }],
+                    invoices: [],
+                    users: window.appData.users, // الاحتفاظ بالمستخدمين
+                    settings: window.appData.settings // الاحتفاظ بالإعدادات
+                };
+                SAWA_POS.saveData();
+                SAWA_POS.showNotification('تم حذف جميع البيانات بنجاح!');
+            }
+        }
+
+        // إعادة تعيين المصنع
+        function resetToDefault() {
+            if (confirm('هل أنت متأكد من إعادة التعيين إلى إعدادات المصنع؟ سيتم حذف جميع البيانات!')) {
+                localStorage.removeItem('sawaPOSData');
+                SAWA_POS.showNotification('تم إعادة التعيين بنجاح!');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
