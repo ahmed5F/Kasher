@@ -8,75 +8,89 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .invoice-row:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
     </style>
 </head>
-<body class="text-white p-6">
-    <!-- شريط التنقل -->
-    <nav class="bg-white/10 backdrop-blur-md p-4 rounded-xl mb-6 flex justify-between items-center">
-        <div class="flex items-center space-x-4 space-x-reverse">
-            <a href="dashboard.html" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+<body class="text-white p-4">
+    <!-- الشريط العلوي -->
+    <nav class="card rounded-xl p-4 mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <a href="dashboard.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all">
                 <i class="fa-solid fa-arrow-right ml-2"></i> العودة
             </a>
             <h1 class="text-xl font-bold flex items-center">
-                <i class="fa-solid fa-file-invoice ml-2"></i> إدارة الفواتير
+                <i class="fa-solid fa-file-invoice ml-2"></i> سجل الفواتير
             </h1>
         </div>
-        
-        <div class="flex items-center space-x-2 space-x-reverse">
-            <div id="clock" class="bg-white/10 px-3 py-1 rounded-lg"></div>
+        <div class="flex items-center space-x-4">
+            <a href="index.html" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-all">
+                <i class="fa-solid fa-home ml-2"></i> الرئيسية
+            </a>
         </div>
     </nav>
 
-    <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-            <div>
-                <h2 class="text-2xl font-bold">سجل الفواتير</h2>
-                <p class="text-white/70">إجمالي الفواتير: <span id="invoicesCount">0</span></p>
-            </div>
-            
-            <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                <input id="invoiceSearch" type="text" placeholder="ابحث برقم الفاتورة أو العميل..." 
-                    class="px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
-                <select id="dateFilter" class="px-4 py-2 rounded-lg bg-white/30 text-white focus:outline-none focus:ring-2 focus:ring-white/50">
-                    <option value="all">جميع الفواتير</option>
-                    <option value="today">فواتير اليوم</option>
-                    <option value="week">هذا الأسبوع</option>
-                    <option value="month">هذا الشهر</option>
-                </select>
+    <div class="container mx-auto">
+        <!-- رأس الصفحة -->
+        <div class="card rounded-xl p-6 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">الفواتير</h2>
+                    <p class="text-white/70">إجمالي الفواتير: <span id="invoicesCount">0</span></p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                    <input type="text" id="searchInvoices" placeholder="ابحث برقم الفاتورة أو العميل..." 
+                        class="px-4 py-2 rounded-lg bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                    <select id="dateFilter" class="px-4 py-2 rounded-lg bg-white/20 text-white focus:outline-none focus:ring-2 focus:ring-white/50">
+                        <option value="all">جميع الفواتير</option>
+                        <option value="today">فواتير اليوم</option>
+                        <option value="week">هذا الأسبوع</option>
+                        <option value="month">هذا الشهر</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-center">
-                <thead>
-                    <tr class="border-b border-white/20">
-                        <th class="pb-3">رقم الفاتورة</th>
-                        <th class="pb-3">التاريخ</th>
-                        <th class="pb-3">العميل</th>
-                        <th class="pb-3">طريقة الدفع</th>
-                        <th class="pb-3">عدد المنتجات</th>
-                        <th class="pb-3">المبلغ الإجمالي</th>
-                        <th class="pb-3">المستخدم</th>
-                        <th class="pb-3">الإجراءات</th>
-                    </tr>
-                </thead>
-                <tbody id="invoicesTable">
-                    <!-- سيتم ملؤها بالفواتير -->
-                </tbody>
-            </table>
+        <!-- جدول الفواتير -->
+        <div class="card rounded-xl p-6">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-white/20">
+                            <th class="pb-4 text-right">رقم الفاتورة</th>
+                            <th class="pb-4 text-right">التاريخ</th>
+                            <th class="pb-4 text-center">العميل</th>
+                            <th class="pb-4 text-center">طريقة الدفع</th>
+                            <th class="pb-4 text-center">المنتجات</th>
+                            <th class="pb-4 text-center">المبلغ الإجمالي</th>
+                            <th class="pb-4 text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesTable">
+                        <!-- سيتم ملؤها بالفواتير -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- نافذة تفاصيل الفاتورة -->
     <div id="invoiceModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden overflow-y-auto">
         <div class="bg-white text-gray-800 rounded-xl w-full max-w-2xl mx-4 p-6 my-8">
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold">تفاصيل الفاتورة</h3>
-                <button onclick="closeInvoiceModal()" class="text-gray-500 hover:text-gray-700">
+                <button onclick="closeInvoiceModal()" class="text-gray-500 hover:text-gray-700 transition-all">
                     <i class="fa-solid fa-times text-xl"></i>
                 </button>
             </div>
@@ -86,35 +100,47 @@
             </div>
             
             <div class="flex justify-end space-x-2 space-x-reverse mt-6">
-                <button onclick="printInvoice()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    <i class="fa-solid fa-print ml-2"></i> طباعة
+                <button onclick="printInvoice()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
+                    <i class="fa-solid fa-print ml-2"></i> طباعة الفاتورة
                 </button>
-                <button onclick="closeInvoiceModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
+                <button onclick="closeInvoiceModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-all">
                     إغلاق
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
+        let invoices = [];
         let currentInvoice = null;
-        
-        // تهيئة التطبيق
-        SAWA_POS.init();
-        renderInvoicesTable();
 
-        // عرض جدول الفواتير
-        function renderInvoicesTable(searchTerm = '', dateFilter = 'all') {
-            let filteredInvoices = [...window.appData.invoices].reverse(); // عرض أحدث الفواتير أولاً
+        // تحميل البيانات
+        function loadData() {
+            const data = localStorage.getItem('sawaPOSData');
+            return data ? JSON.parse(data) : null;
+        }
+
+        // تنسيق العملة
+        function formatCurrency(amount) {
+            const data = loadData();
+            const currency = data?.settings?.currency || 'د.ع';
+            return new Intl.NumberFormat('ar-IQ').format(amount) + ' ' + currency;
+        }
+
+        // عرض الفواتير
+        function displayInvoices() {
+            const data = loadData();
+            invoices = data?.invoices || [];
             
-            if (searchTerm) {
-                filteredInvoices = filteredInvoices.filter(invoice => 
-                    invoice.id.toString().includes(searchTerm) || 
-                    invoice.customer.includes(searchTerm)
-                );
-            }
+            const searchTerm = document.getElementById('searchInvoices').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
             
+            let filteredInvoices = invoices.filter(invoice => 
+                invoice.id.toString().includes(searchTerm) ||
+                invoice.customer.toLowerCase().includes(searchTerm)
+            );
+
+            // تطبيق فلتر التاريخ
             if (dateFilter !== 'all') {
                 const today = new Date();
                 filteredInvoices = filteredInvoices.filter(invoice => {
@@ -136,14 +162,21 @@
                     }
                 });
             }
-            
-            const invoicesHtml = filteredInvoices.map(invoice => `
-                <tr class="border-b border-white/10 hover:bg-white/10">
-                    <td class="py-3 font-mono">${invoice.id}</td>
-                    <td class="py-3">${invoice.date}<br><span class="text-xs text-white/70">${invoice.time}</span></td>
-                    <td class="py-3">${invoice.customer}</td>
-                    <td class="py-3">
-                        <span class="px-2 py-1 rounded-full text-xs ${
+
+            // ترتيب الفواتير من الأحدث إلى الأقدم
+            filteredInvoices.sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
+
+            const tableBody = document.getElementById('invoicesTable');
+            tableBody.innerHTML = filteredInvoices.map(invoice => `
+                <tr class="invoice-row border-b border-white/10 transition-all">
+                    <td class="py-4 text-right font-mono">#${invoice.id}</td>
+                    <td class="py-4 text-right">
+                        <div class="font-semibold">${invoice.date}</div>
+                        <div class="text-white/70 text-xs">${invoice.time}</div>
+                    </td>
+                    <td class="py-4 text-center">${invoice.customer}</td>
+                    <td class="py-4 text-center">
+                        <span class="px-3 py-1 rounded-full text-xs ${
                             invoice.paymentMethod === 'نقدي' ? 'bg-green-500/20 text-green-300' :
                             invoice.paymentMethod === 'بطاقة' ? 'bg-blue-500/20 text-blue-300' :
                             'bg-purple-500/20 text-purple-300'
@@ -151,51 +184,56 @@
                             ${invoice.paymentMethod}
                         </span>
                     </td>
-                    <td class="py-3">${invoice.items.length}</td>
-                    <td class="py-3 font-semibold">${SAWA_POS.formatCurrency(invoice.total)}</td>
-                    <td class="py-3 text-sm">${invoice.user || 'النظام'}</td>
-                    <td class="py-3">
-                        <button onclick="viewInvoiceDetails(${invoice.id})" 
-                            class="text-blue-400 hover:text-blue-600 mx-1" title="عرض التفاصيل">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                        <button onclick="printSingleInvoice(${invoice.id})" 
-                            class="text-green-400 hover:text-green-600 mx-1" title="طباعة">
-                            <i class="fa-solid fa-print"></i>
-                        </button>
+                    <td class="py-4 text-center">
+                        <span class="bg-white/10 px-3 py-1 rounded-full text-xs">
+                            ${invoice.items.length} منتج
+                        </span>
+                    </td>
+                    <td class="py-4 text-center font-semibold">${formatCurrency(invoice.total)}</td>
+                    <td class="py-4 text-center">
+                        <div class="flex justify-center space-x-2 space-x-reverse">
+                            <button onclick="viewInvoice(${invoice.id})" 
+                                class="text-blue-400 hover:text-blue-300 transition-all" title="عرض التفاصيل">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button onclick="printSingleInvoice(${invoice.id})" 
+                                class="text-green-400 hover:text-green-300 transition-all" title="طباعة">
+                                <i class="fa-solid fa-print"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
-            `).join('') || '<tr><td colspan="8" class="py-4 text-white/50">لا توجد فواتير</td></tr>';
-            
-            document.getElementById('invoicesTable').innerHTML = invoicesHtml;
+            `).join('') || `
+                <tr>
+                    <td colspan="7" class="py-8 text-center text-white/50">
+                        <i class="fa-solid fa-file-invoice text-3xl mb-2 block"></i>
+                        لا توجد فواتير
+                    </td>
+                </tr>
+            `;
+
             document.getElementById('invoicesCount').textContent = filteredInvoices.length;
-            
-            // البحث في الفواتير
-            document.getElementById('invoiceSearch').addEventListener('input', function() {
-                renderInvoicesTable(this.value, document.getElementById('dateFilter').value);
-            });
-            
-            // تصفية حسب التاريخ
-            document.getElementById('dateFilter').addEventListener('change', function() {
-                renderInvoicesTable(document.getElementById('invoiceSearch').value, this.value);
-            });
+
+            // إضافة مستمعات البحث والتصفية
+            document.getElementById('searchInvoices').addEventListener('input', displayInvoices);
+            document.getElementById('dateFilter').addEventListener('change', displayInvoices);
         }
 
         // عرض تفاصيل الفاتورة
-        function viewInvoiceDetails(invoiceId) {
-            currentInvoice = window.appData.invoices.find(inv => inv.id === invoiceId);
+        function viewInvoice(invoiceId) {
+            currentInvoice = invoices.find(inv => inv.id === invoiceId);
             
             if (!currentInvoice) return;
             
             const itemsHtml = currentInvoice.items.map(item => `
                 <tr class="border-b border-gray-200">
-                    <td class="py-2">${item.name}</td>
-                    <td class="py-2">${item.quantity}</td>
-                    <td class="py-2">${SAWA_POS.formatCurrency(item.price)}</td>
-                    <td class="py-2">${SAWA_POS.formatCurrency(item.price * item.quantity)}</td>
+                    <td class="py-3">${item.name}</td>
+                    <td class="py-3 text-center">${item.quantity}</td>
+                    <td class="py-3 text-center">${formatCurrency(item.price)}</td>
+                    <td class="py-3 text-center font-semibold">${formatCurrency(item.price * item.quantity)}</td>
                 </tr>
             `).join('');
-            
+
             document.getElementById('invoiceDetails').innerHTML = `
                 <div class="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
                     <div>
@@ -210,19 +248,16 @@
                     <div>
                         <strong>طريقة الدفع:</strong> ${currentInvoice.paymentMethod}
                     </div>
-                    <div>
-                        <strong>المستخدم:</strong> ${currentInvoice.user || 'النظام'}
-                    </div>
                 </div>
                 
-                <h4 class="font-bold mb-3">المنتجات:</h4>
-                <table class="w-full text-center mb-4">
+                <h4 class="font-bold mb-3 text-lg">المنتجات المشتراة:</h4>
+                <table class="w-full mb-6">
                     <thead>
                         <tr class="border-b border-gray-300">
-                            <th class="pb-2">المنتج</th>
-                            <th class="pb-2">الكمية</th>
-                            <th class="pb-2">سعر الوحدة</th>
-                            <th class="pb-2">المجموع</th>
+                            <th class="pb-2 text-right">المنتج</th>
+                            <th class="pb-2 text-center">الكمية</th>
+                            <th class="pb-2 text-center">سعر الوحدة</th>
+                            <th class="pb-2 text-center">المجموع</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -230,18 +265,18 @@
                     </tbody>
                 </table>
                 
-                <div class="border-t border-gray-300 pt-3 space-y-2">
+                <div class="border-t border-gray-300 pt-4 space-y-2">
                     <div class="flex justify-between">
-                        <span>المجموع:</span>
-                        <span>${SAWA_POS.formatCurrency(currentInvoice.subtotal)}</span>
+                        <span class="font-semibold">المجموع:</span>
+                        <span>${formatCurrency(currentInvoice.subtotal)}</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>الضريبة (10%):</span>
-                        <span>${SAWA_POS.formatCurrency(currentInvoice.tax)}</span>
+                        <span class="font-semibold">الضريبة (10%):</span>
+                        <span>${formatCurrency(currentInvoice.tax)}</span>
                     </div>
-                    <div class="flex justify-between font-bold text-lg">
+                    <div class="flex justify-between font-bold text-lg border-t border-gray-300 pt-2">
                         <span>الإجمالي:</span>
-                        <span>${SAWA_POS.formatCurrency(currentInvoice.total)}</span>
+                        <span>${formatCurrency(currentInvoice.total)}</span>
                     </div>
                 </div>
             `;
@@ -260,33 +295,75 @@
             if (!currentInvoice) return;
             
             const printWindow = window.open('', '_blank');
+            const data = loadData();
+            
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html dir="rtl">
                 <head>
                     <title>فاتورة ${currentInvoice.id}</title>
                     <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-                        .details { margin-bottom: 20px; }
-                        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-                        th { background-color: #f2f2f2; }
-                        .total { border-top: 2px solid #333; padding-top: 10px; margin-top: 20px; }
-                        @media print { body { margin: 0; } }
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            margin: 20px; 
+                            line-height: 1.6;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 20px; 
+                            border-bottom: 2px solid #333; 
+                            padding-bottom: 10px; 
+                        }
+                        .details { 
+                            margin-bottom: 20px; 
+                            display: grid;
+                            grid-template-columns: 1fr 1fr;
+                            gap: 10px;
+                        }
+                        table { 
+                            width: 100%; 
+                            border-collapse: collapse; 
+                            margin-bottom: 20px; 
+                        }
+                        th, td { 
+                            border: 1px solid #ddd; 
+                            padding: 10px; 
+                            text-align: center; 
+                        }
+                        th { 
+                            background-color: #f2f2f2; 
+                            font-weight: bold;
+                        }
+                        .total { 
+                            border-top: 2px solid #333; 
+                            padding-top: 10px; 
+                            margin-top: 20px; 
+                        }
+                        @media print { 
+                            body { margin: 0; } 
+                            .no-print { display: none; }
+                        }
+                        .footer {
+                            text-align: center;
+                            margin-top: 30px;
+                            padding-top: 20px;
+                            border-top: 1px solid #ddd;
+                            color: #666;
+                        }
                     </style>
                 </head>
                 <body>
                     <div class="header">
-                        <h2>${window.appData.settings.companyName}</h2>
+                        <h2>${data.settings.companyName}</h2>
                         <h3>فاتورة مبيعات</h3>
                     </div>
                     
                     <div class="details">
-                        <p><strong>رقم الفاتورة:</strong> ${currentInvoice.id}</p>
-                        <p><strong>التاريخ:</strong> ${currentInvoice.date} ${currentInvoice.time}</p>
-                        <p><strong>العميل:</strong> ${currentInvoice.customer}</p>
-                        <p><strong>طريقة الدفع:</strong> ${currentInvoice.paymentMethod}</p>
+                        <div><strong>رقم الفاتورة:</strong> ${currentInvoice.id}</div>
+                        <div><strong>التاريخ:</strong> ${currentInvoice.date}</div>
+                        <div><strong>الوقت:</strong> ${currentInvoice.time}</div>
+                        <div><strong>العميل:</strong> ${currentInvoice.customer}</div>
+                        <div><strong>طريقة الدفع:</strong> ${currentInvoice.paymentMethod}</div>
                     </div>
                     
                     <table>
@@ -303,37 +380,68 @@
                                 <tr>
                                     <td>${item.name}</td>
                                     <td>${item.quantity}</td>
-                                    <td>${SAWA_POS.formatCurrency(item.price)}</td>
-                                    <td>${SAWA_POS.formatCurrency(item.price * item.quantity)}</td>
+                                    <td>${formatCurrency(item.price)}</td>
+                                    <td>${formatCurrency(item.price * item.quantity)}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
                     </table>
                     
                     <div class="total">
-                        <p><strong>المجموع:</strong> ${SAWA_POS.formatCurrency(currentInvoice.subtotal)}</p>
-                        <p><strong>الضريبة:</strong> ${SAWA_POS.formatCurrency(currentInvoice.tax)}</p>
-                        <p><strong>الإجمالي:</strong> ${SAWA_POS.formatCurrency(currentInvoice.total)}</p>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <strong>المجموع:</strong>
+                            <span>${formatCurrency(currentInvoice.subtotal)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <strong>الضريبة:</strong>
+                            <span>${formatCurrency(currentInvoice.tax)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 1.2em; font-weight: bold;">
+                            <strong>الإجمالي:</strong>
+                            <span>${formatCurrency(currentInvoice.total)}</span>
+                        </div>
                     </div>
                     
-                    <div style="text-align: center; margin-top: 30px;">
+                    <div class="footer">
                         <p>شكراً لتعاملكم معنا</p>
+                        <p>${data.settings.companyPhone} - ${data.settings.companyAddress}</p>
                     </div>
                 </body>
                 </html>
             `);
             
             printWindow.document.close();
+            printWindow.focus();
             printWindow.print();
         }
 
         // طباعة فاتورة محددة
         function printSingleInvoice(invoiceId) {
-            currentInvoice = window.appData.invoices.find(inv => inv.id === invoiceId);
+            currentInvoice = invoices.find(inv => inv.id === invoiceId);
             if (currentInvoice) {
                 printInvoice();
             }
         }
+
+        // إشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // تهيئة الصفحة
+        function initInvoices() {
+            displayInvoices();
+        }
+
+        // تشغيل عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initInvoices);
     </script>
 </body>
 </html>
