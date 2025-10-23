@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقارير | Sawa POS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body class="text-white p-6">
+    <!-- شريط التنقل -->
+    <nav class="bg-white/10 backdrop-blur-md p-4 rounded-xl mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4 space-x-reverse">
+            <a href="dashboard.html" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+                <i class="fa-solid fa-arrow-right ml-2"></i> العودة
+            </a>
+            <h1 class="text-xl font-bold flex items-center">
+                <i class="fa-solid fa-chart-bar ml-2"></i> التقارير والإحصائيات
+            </h1>
+        </div>
+        
+        <div class="flex items-center space-x-2 space-x-reverse">
+            <div id="clock" class="bg-white/10 px-3 py-1 rounded-lg"></div>
+        </div>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- فلترة التقارير -->
+        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
+            <h3 class="text-xl font-bold mb-4">فلترة التقارير</h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">من تاريخ</label>
+                        <input type="date" id="startDate" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                    </div>
+                    <div>
+                        <label class="block mb-2">إلى تاريخ</label>
+                        <input type="date" id="endDate" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2">نوع التقرير</label>
+                        <select id="reportType" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                            <option value="sales">تقرير المبيعات</option>
+                            <option value="products">تقرير المنتجات</option>
+                            <option value="customers">تقرير العملاء</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2">الفترة</label>
+                        <select id="period" class="w-full px-3 py-2 rounded-lg bg-white/30 text-white">
+                            <option value="today">اليوم</option>
+                            <option value="week">هذا الأسبوع</option>
+                            <option value="month">هذا الشهر</option>
+                            <option value="year">هذه السنة</option>
+                            <option value="custom">مخصص</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="generateReport()" class="w-full bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition">
+                    <i class="fa-solid fa-chart-line ml-2"></i> إنشاء التقرير
+                </button>
+            </div>
+        </div>
+
+        <!-- ملخص سريع -->
+        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
+            <h3 class="text-xl font-bold mb-4">ملخص سريع</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
+                    <span>إجمالي المبيعات:</span>
+                    <span class="font-bold" id="totalSales">0 د.ع</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
+                    <span>عدد الفواتير:</span>
+                    <span class="font-bold" id="totalInvoices">0</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
+                    <span>متوسط قيمة الفاتورة:</span>
+                    <span class="font-bold" id="averageInvoice">0 د.ع</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white/10 rounded-lg">
+                    <span>أفضل عميل:</span>
+                    <span class="font-bold" id="topCustomer">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نتائج التقرير -->
+    <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
+        <h3 class="text-xl font-bold mb-4" id="reportTitle">تقرير المبيعات</h3>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-center" id="reportTable">
+                <!-- سيتم ملؤها بنتائج التقرير -->
+            </table>
+        </div>
+        
+        <div class="mt-4 flex justify-end">
+            <button onclick="exportToExcel()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg font-semibold transition">
+                <i class="fa-solid fa-file-excel ml-2"></i> تصدير إلى Excel
+            </button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // تهيئة التطبيق
+        SAWA_POS.init();
+        updateQuickSummary();
+
+        // تحديث الملخص السريع
+        function updateQuickSummary() {
+            const invoices = window.appData.invoices;
+            const totalSales = invoices.reduce((sum, inv) => sum + inv.total, 0);
+            const totalInvoices = invoices.length;
+            const averageInvoice = totalInvoices > 0 ? totalSales / totalInvoices : 0;
+            
+            // إيجاد أفضل عميل
+            const customerSales = {};
+            invoices.forEach(inv => {
+                customerSales[inv.customer] = (customerSales[inv.customer] || 0) + inv.total;
+            });
+            
+            let topCustomer = '-';
+            let maxSales = 0;
+            Object.keys(customerSales).forEach(customer => {
+                if (customerSales[customer] > maxSales && customer !== 'عميل نقدي') {
+                    maxSales = customerSales[customer];
+                    topCustomer = customer;
+                }
+            });
+            
+            document.getElementById('totalSales').textContent = SAWA_POS.formatCurrency(totalSales);
+            document.getElementById('totalInvoices').textContent = totalInvoices;
+            document.getElementById('averageInvoice').textContent = SAWA_POS.formatCurrency(averageInvoice);
+            document.getElementById('topCustomer').textContent = topCustomer;
+        }
+
+        // إنشاء التقرير
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const period = document.getElementById('period').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            let filteredInvoices = filterInvoicesByPeriod(period, startDate, endDate);
+            
+            switch(reportType) {
+                case 'sales':
+                    generateSalesReport(filteredInvoices);
+                    break;
+                case 'products':
+                    generateProductsReport(filteredInvoices);
+                    break;
+                case 'customers':
+                    generateCustomersReport(filteredInvoices);
+                    break;
+            }
+        }
+
+        // تصفية الفواتير حسب الفترة
+        function filterInvoicesByPeriod(period, startDate, endDate) {
+            let filteredInvoices = [...window.appData.invoices];
+            
+            if (period === 'custom' && startDate && endDate) {
+                filteredInvoices = filteredInvoices.filter(inv => 
+                    inv.date >= startDate && inv.date <= endDate
+                );
+            } else {
+                const today = new Date();
+                let startDateFilter;
+                
+                switch(period) {
+                    case 'today':
+                        startDateFilter = today.toISOString().split('T')[0];
+                        filteredInvoices = filteredInvoices.filter(inv => inv.date === startDateFilter);
+                        break;
+                    case 'week':
+                        startDateFilter = new Date(today);
+                        startDateFilter.setDate(today.getDate() - 7);
+                        filteredInvoices = filteredInvoices.filter(inv => new Date(inv.date) >= startDateFilter);
+                        break;
+                    case 'month':
+                        startDateFilter = new Date(today);
+                        startDateFilter.setMonth(today.getMonth() - 1);
+                        filteredInvoices = filteredInvoices.filter(inv => new Date(inv.date) >= startDateFilter);
+                        break;
+                    case 'year':
+                        startDateFilter = new Date(today);
+                        startDateFilter.setFullYear(today.getFullYear() - 1);
+                        filteredInvoices = filteredInvoices.filter(inv => new Date(inv.date) >= startDateFilter);
+                        break;
+                }
+            }
+            
+            return filteredInvoices;
+        }
+
+        // تقرير المبيعات
+        function generateSalesReport(invoices) {
+            document.getElementById('reportTitle').textContent = 'تقرير المبيعات';
+            
+            const salesByDate = {};
+            invoices.forEach(inv => {
+                salesByDate[inv.date] = (salesByDate[inv.date] || 0) + inv.total;
+            });
+            
+            const tableHtml = `
+                <thead>
+                    <tr class="border-b border-white/20">
+                        <th class="pb-3">التاريخ</th>
+                        <th class="pb-3">عدد الفواتير</th>
+                        <th class="pb-3">إجمالي المبيعات</th>
+                        <th class="pb-3">متوسط الفاتورة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Object.keys(salesByDate).map(date => {
+                        const dateInvoices = invoices.filter(inv => inv.date === date);
+                        const totalSales = salesByDate[date];
+                        const average = totalSales / dateInvoices.length;
+                        
+                        return `
+                            <tr class="border-b border-white/10">
+                                <td class="py-3">${date}</td>
+                                <td class="py-3">${dateInvoices.length}</td>
+                                <td class="py-3">${SAWA_POS.formatCurrency(totalSales)}</td>
+                                <td class="py-3">${SAWA_POS.formatCurrency(average)}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                    <tr class="border-t border-white/20 font-bold">
+                        <td class="py-3">المجموع</td>
+                        <td class="py-3">${invoices.length}</td>
+                        <td class="py-3">${SAWA_POS.formatCurrency(invoices.reduce((sum, inv) => sum + inv.total, 0))}</td>
+                        <td class="py-3">${SAWA_POS.formatCurrency(invoices.length > 0 ? invoices.reduce((sum, inv) => sum + inv.total, 0) / invoices.length : 0)}</td>
+                    </tr>
+                </tbody>
+            `;
+            
+            document.getElementById('reportTable').innerHTML = tableHtml;
+        }
+
+        // تقرير المنتجات
+        function generateProductsReport(invoices) {
+            document.getElementById('reportTitle').textContent = 'تقرير المنتجات الأكثر مبيعاً';
+            
+            const productSales = {};
+            invoices.forEach(inv => {
+                inv.items.forEach(item => {
+                    productSales[item.name] = productSales[item.name] || { quantity: 0, revenue: 0 };
+                    productSales[item.name].quantity += item.quantity;
+                    productSales[item.name].revenue += item.price * item.quantity;
+                });
+            });
+            
+            const sortedProducts = Object.keys(productSales).sort((a, b) => productSales[b].quantity - productSales[a].quantity);
+            
+            const tableHtml = `
+                <thead>
+                    <tr class="border-b border-white/20">
+                        <th class="pb-3">المنتج</th>
+                        <th class="pb-3">الكمية المباعة</th>
+                        <th class="pb-3">إجمالي الإيرادات</th>
+                        <th class="pb-3">متوسط سعر البيع</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${sortedProducts.map(product => {
+                        const sales = productSales[product];
+                        const avgPrice = sales.revenue / sales.quantity;
+                        
+                        return `
+                            <tr class="border-b border-white/10">
+                                <td class="py-3">${product}</td>
+                                <td class="py-3">${sales.quantity}</td>
+                                <td class="py-3">${SAWA_POS.formatCurrency(sales.revenue)}</td>
+                                <td class="py-3">${SAWA_POS.formatCurrency(avgPrice)}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            `;
+            
+            document.getElementById('reportTable').innerHTML = tableHtml;
+        }
+
+        // تقرير العملاء
+        function generateCustomersReport(invoices) {
+            document.getElementById('reportTitle').textContent = 'تقرير العملاء';
+            
+            const customerStats = {};
+            invoices.forEach(inv => {
+                if (inv.customer !== 'عميل نقدي') {
+                    customerStats[inv.customer] = customerStats[inv.customer] || { invoices: 0, total: 0 };
+                    customerStats[inv.customer].invoices += 1;
+                    customerStats[inv.customer].total += inv.total;
+                }
+            });
+            
+            const sortedCustomers = Object.keys(customerStats).sort((a, b) => customerStats[b].total - customerStats[a].total);
+            
+            const tableHtml = `
+                <thead>
+                    <tr class="border-b border-white/20">
+                        <th class="pb-3">العميل</th>
+                        <th class="pb-3">عدد الفواتير</th>
+                        <th class="pb-3">إجمالي المشتريات</th>
+                        <th class="pb-3">متوسط قيمة الفاتورة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${sortedCustomers.map(customer => {
+                        const stats = customerStats[customer];
+                        const avgInvoice = stats.total / stats.invoices;
+                        
+                        return `
+                            <tr class="border-b border-white/10">
+                                <td class="py-3">${customer}</td>
+                                <td class="py-3">${stats.invoices}</td>
+                                <td class="py-3">${SAWA_POS.formatCurrency(stats.total)}</td>
+                                <td class="py-3">${SAWA_POS.formatCurrency(avgInvoice)}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            `;
+            
+            document.getElementById('reportTable').innerHTML = tableHtml;
+        }
+
+        // تصدير إلى Excel
+        function exportToExcel() {
+            const table = document.getElementById('reportTable');
+            let csv = [];
+            
+            // العنوان
+            csv.push(document.getElementById('reportTitle').textContent);
+            csv.push('');
+            
+            // الرؤوس
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => {
+                headers.push(th.textContent);
+            });
+            csv.push(headers.join(','));
+            
+            // البيانات
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach(td => {
+                    row.push(td.textContent);
+                });
+                csv.push(row.join(','));
+            });
+            
+            // إنشاء ملف وتنزيله
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `تقرير_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // تحديث تواريخ الفلترة
+        document.getElementById('period').addEventListener('change', function() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (this.value === 'today') {
+                document.getElementById('startDate').value = today;
+                document.getElementById('endDate').value = today;
+            } else if (this.value === 'custom') {
+                document.getElementById('startDate').value = '';
+                document.getElementById('endDate').value = '';
+            }
+        });
+
+        // تعيين تواريخ افتراضية
+        document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('endDate').value = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>
