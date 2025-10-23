@@ -8,140 +8,136 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(to bottom right, #7C3AED, #4F46E5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .pos-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .product-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #invoicePrint, #invoicePrint * {
-                visibility: visible;
-            }
-            #invoicePrint {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
-<body class="text-white p-6">
-    <!-- شريط التنقل -->
-    <nav class="bg-white/10 backdrop-blur-md p-4 rounded-xl mb-6 flex justify-between items-center">
-        <div class="flex items-center space-x-4 space-x-reverse">
-            <a href="dashboard.html" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition">
+<body class="text-white p-4">
+    <!-- الشريط العلوي -->
+    <nav class="pos-card rounded-xl p-4 mb-6 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <a href="dashboard.html" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all">
                 <i class="fa-solid fa-arrow-right ml-2"></i> العودة
             </a>
             <h1 class="text-xl font-bold flex items-center">
                 <i class="fa-solid fa-cart-shopping ml-2"></i> نقطة البيع
             </h1>
         </div>
-        
-        <div class="flex items-center space-x-2 space-x-reverse">
-            <div id="clock" class="bg-white/10 px-3 py-1 rounded-lg"></div>
+        <div class="flex items-center space-x-4">
+            <div id="currentTime" class="bg-white/10 px-3 py-1 rounded-lg"></div>
+            <a href="index.html" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition-all">
+                <i class="fa-solid fa-home ml-2"></i> الرئيسية
+            </a>
         </div>
     </nav>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- قسم المنتجات -->
         <div class="lg:col-span-2">
-            <div class="bg-white/20 backdrop-blur-md rounded-xl p-5 mb-6">
-                <div class="flex flex-col md:flex-row gap-4 mb-4">
-                    <input id="productSearch" type="text" placeholder="ابحث عن منتج..." 
-                        class="flex-1 px-4 py-3 rounded-lg bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
-                    <button id="scanBarcode" class="bg-blue-500 hover:bg-blue-600 px-4 py-3 rounded-lg font-semibold transition">
-                        <i class="fa-solid fa-barcode ml-2"></i> مسح الباركود
+            <div class="pos-card rounded-xl p-6 mb-6">
+                <!-- شريط البحث -->
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <input type="text" id="searchInput" placeholder="ابحث عن منتج..." 
+                        class="flex-1 px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50">
+                    <button class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg font-semibold transition-all">
+                        <i class="fa-solid fa-barcode ml-2"></i> مسح باركود
                     </button>
                 </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="productGrid">
+
+                <!-- شبكة المنتجات -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="productsGrid">
                     <!-- سيتم ملؤها بالمنتجات -->
                 </div>
             </div>
         </div>
-        
+
         <!-- سلة المشتريات -->
-        <div class="bg-white/20 backdrop-blur-md rounded-xl p-5">
-            <h3 class="text-xl font-bold mb-4">سلة المشتريات</h3>
-            
+        <div class="pos-card rounded-xl p-6">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fa-solid fa-shopping-cart ml-2"></i> سلة المشتريات
+            </h2>
+
+            <!-- معلومات العميل -->
             <div class="mb-4 space-y-3">
                 <div class="flex justify-between items-center">
                     <span>العميل:</span>
-                    <select id="customerSelect" class="bg-white/30 text-white rounded px-3 py-2 w-40">
-                        <option value="">اختر العميل</option>
+                    <select id="customerSelect" class="bg-white/20 text-white rounded px-3 py-2 w-40">
+                        <option value="عميل نقدي">عميل نقدي</option>
                     </select>
                 </div>
-                
                 <div class="flex justify-between items-center">
                     <span>طريقة الدفع:</span>
-                    <select id="paymentMethod" class="bg-white/30 text-white rounded px-3 py-2 w-40">
+                    <select id="paymentMethod" class="bg-white/20 text-white rounded px-3 py-2 w-40">
                         <option value="نقدي">نقدي</option>
                         <option value="بطاقة">بطاقة</option>
                         <option value="تحويل">تحويل</option>
                     </select>
                 </div>
             </div>
-            
-            <div class="max-h-64 overflow-y-auto mb-4">
-                <table class="w-full text-center">
-                    <thead>
-                        <tr class="border-b border-white/20">
-                            <th class="pb-2">المنتج</th>
-                            <th class="pb-2">الكمية</th>
-                            <th class="pb-2">السعر</th>
-                            <th class="pb-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="cartItems">
-                        <!-- سيتم ملؤها بالمنتجات المضافة -->
-                    </tbody>
-                </table>
+
+            <!-- عناصر السلة -->
+            <div class="max-h-64 overflow-y-auto mb-4 space-y-2" id="cartItems">
+                <!-- سيتم ملؤها -->
             </div>
-            
+
+            <!-- الملخص -->
             <div class="border-t border-white/20 pt-4 space-y-2">
                 <div class="flex justify-between">
                     <span>المجموع:</span>
                     <span id="subtotal">0 د.ع</span>
                 </div>
-                
                 <div class="flex justify-between">
                     <span>الضريبة (10%):</span>
                     <span id="taxAmount">0 د.ع</span>
                 </div>
-                
                 <div class="flex justify-between text-lg font-bold border-t border-white/20 pt-2">
                     <span>الإجمالي:</span>
                     <span id="totalAmount">0 د.ع</span>
                 </div>
-                
-                <div class="flex space-x-2 space-x-reverse mt-4">
-                    <button id="clearCart" class="flex-1 bg-red-500 hover:bg-red-600 py-3 rounded-lg font-semibold transition">
-                        <i class="fa-solid fa-trash ml-2"></i> إفراغ
-                    </button>
-                    <button id="completeSale" class="flex-1 bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition">
-                        <i class="fa-solid fa-check ml-2"></i> إنهاء البيع
-                    </button>
-                </div>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="flex space-x-2 mt-6">
+                <button onclick="clearCart()" class="flex-1 bg-red-500 hover:bg-red-600 py-3 rounded-lg font-semibold transition-all">
+                    <i class="fa-solid fa-trash ml-2"></i> إفراغ
+                </button>
+                <button onclick="completeSale()" class="flex-1 bg-green-500 hover:bg-green-600 py-3 rounded-lg font-semibold transition-all">
+                    <i class="fa-solid fa-check ml-2"></i> إنهاء البيع
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- نافذة الطباعة (مخفية) -->
-    <div id="invoicePrint" class="hidden bg-white text-black p-6 rounded-lg max-w-md mx-auto mt-6">
-        <div class="text-center mb-4">
-            <h2 class="text-xl font-bold" id="printCompanyName">Sawa POS</h2>
+    <!-- منطقة الطباعة (مخفية) -->
+    <div id="printArea" class="hidden bg-white text-black p-6 rounded-lg max-w-md mx-auto mt-6">
+        <div class="text-center mb-4 border-b pb-4">
+            <h2 class="text-xl font-bold" id="printCompany">Sawa POS</h2>
             <p class="text-gray-600" id="printDate">التاريخ: </p>
+            <p class="text-gray-600" id="printInvoiceId">رقم الفاتورة: </p>
         </div>
         
-        <div class="border-b border-gray-300 pb-2 mb-4">
-            <div class="flex justify-between">
-                <span>رقم الفاتورة:</span>
-                <span id="printInvoiceId">-</span>
-            </div>
-            <div class="flex justify-between">
+        <div class="mb-4">
+            <div class="flex justify-between mb-2">
                 <span>العميل:</span>
                 <span id="printCustomer">-</span>
             </div>
@@ -152,7 +148,7 @@
                 <tr class="border-b border-gray-300">
                     <th class="pb-2">المنتج</th>
                     <th class="pb-2">الكمية</th>
-                    <th class="pb-2">السعر</th>
+                    <th class="pb-2">المجموع</th>
                 </tr>
             </thead>
             <tbody id="printItems">
@@ -160,7 +156,7 @@
             </tbody>
         </table>
         
-        <div class="border-t border-gray-300 pt-2 space-y-1">
+        <div class="border-t border-gray-300 pt-3 space-y-1">
             <div class="flex justify-between">
                 <span>المجموع:</span>
                 <span id="printSubtotal">0 د.ع</span>
@@ -169,7 +165,7 @@
                 <span>الضريبة:</span>
                 <span id="printTax">0 د.ع</span>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between font-bold text-lg border-t border-gray-300 pt-2">
                 <span>الإجمالي:</span>
                 <span id="printTotal">0 د.ع</span>
             </div>
@@ -180,72 +176,84 @@
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
         let cart = [];
-        
-        // تهيئة التطبيق
-        SAWA_POS.init();
-        loadCustomers();
-        renderProductsGrid();
-        updateCart();
+        let products = [];
+        let customers = [];
 
-        // تحميل العملاء
-        function loadCustomers() {
-            const customerSelect = document.getElementById('customerSelect');
-            customerSelect.innerHTML = '<option value="عميل نقدي">عميل نقدي</option>';
-            
-            window.appData.customers.forEach(customer => {
-                if (customer.name !== 'عميل نقدي') {
-                    customerSelect.innerHTML += `<option value="${customer.name}">${customer.name}</option>`;
-                }
-            });
+        // تحميل البيانات
+        function loadData() {
+            const data = localStorage.getItem('sawaPOSData');
+            if (data) {
+                const parsed = JSON.parse(data);
+                products = parsed.products || [];
+                customers = parsed.customers || [];
+            }
+            return parsed;
+        }
+
+        // تنسيق العملة
+        function formatCurrency(amount) {
+            const data = loadData();
+            const currency = data?.settings?.currency || 'د.ع';
+            return new Intl.NumberFormat('ar-IQ').format(amount) + ' ' + currency;
+        }
+
+        // تحديث الوقت
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('currentTime').textContent = time;
         }
 
         // عرض المنتجات
-        function renderProductsGrid(searchTerm = '') {
-            let filteredProducts = window.appData.products;
+        function displayProducts() {
+            const grid = document.getElementById('productsGrid');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
-            if (searchTerm) {
-                filteredProducts = window.appData.products.filter(product => 
-                    product.name.includes(searchTerm) || 
-                    product.category.includes(searchTerm)
-                );
-            }
-            
-            const productsHtml = filteredProducts.map(product => `
-                <div class="product-card bg-white/10 rounded-lg p-3 text-center cursor-pointer hover:bg-white/20 transition" 
-                     onclick="addToCart(${product.id})"
-                     ${product.stock <= 0 ? 'style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+
+            grid.innerHTML = filteredProducts.map(product => `
+                <div class="product-card bg-white/10 rounded-lg p-4 text-center" onclick="addToCart(${product.id})">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
                         <i class="fa-solid fa-box"></i>
                     </div>
-                    <h4 class="font-semibold text-sm">${product.name}</h4>
-                    <p class="text-xs text-white/70 my-1">${SAWA_POS.formatCurrency(product.price)}</p>
-                    <p class="text-xs ${product.stock > 10 ? 'text-green-300' : product.stock > 0 ? 'text-yellow-300' : 'text-red-300'}">
+                    <h3 class="font-semibold text-sm mb-1">${product.name}</h3>
+                    <p class="text-white/70 text-xs mb-2">${formatCurrency(product.price)}</p>
+                    <div class="text-xs ${product.stock > 10 ? 'text-green-300' : product.stock > 0 ? 'text-yellow-300' : 'text-red-300'}">
                         ${product.stock > 0 ? `المخزون: ${product.stock}` : 'غير متوفر'}
-                    </p>
+                    </div>
                 </div>
             `).join('');
+
+            // إضافة مستمع البحث
+            document.getElementById('searchInput').addEventListener('input', displayProducts);
+        }
+
+        // تحميل العملاء
+        function loadCustomers() {
+            const select = document.getElementById('customerSelect');
+            select.innerHTML = '<option value="عميل نقدي">عميل نقدي</option>';
             
-            document.getElementById('productGrid').innerHTML = productsHtml;
-            
-            // البحث عن المنتجات
-            document.getElementById('productSearch').addEventListener('input', function() {
-                renderProductsGrid(this.value);
+            customers.forEach(customer => {
+                if (customer.name !== 'عميل نقدي') {
+                    select.innerHTML += `<option value="${customer.name}">${customer.name}</option>`;
+                }
             });
         }
 
         // إضافة منتج للسلة
         function addToCart(productId) {
-            const product = window.appData.products.find(p => p.id === productId);
-            
+            const product = products.find(p => p.id === productId);
             if (!product || product.stock <= 0) return;
+
+            const existingItem = cart.find(item => item.id === productId);
             
-            const cartItem = cart.find(item => item.id === productId);
-            
-            if (cartItem) {
-                cartItem.quantity += 1;
+            if (existingItem) {
+                existingItem.quantity++;
             } else {
                 cart.push({
                     id: product.id,
@@ -254,64 +262,54 @@
                     quantity: 1
                 });
             }
-            
+
             updateCart();
+            showNotification('تم إضافة المنتج إلى السلة');
         }
 
         // تحديث السلة
         function updateCart() {
-            const cartItems = document.getElementById('cartItems');
-            const subtotalElement = document.getElementById('subtotal');
-            const taxAmountElement = document.getElementById('taxAmount');
-            const totalAmountElement = document.getElementById('totalAmount');
-            
+            const container = document.getElementById('cartItems');
             let subtotal = 0;
-            let cartHtml = '';
-            
+
             if (cart.length === 0) {
-                cartHtml = '<tr><td colspan="4" class="py-4 text-white/50">السلة فارغة</td></tr>';
+                container.innerHTML = '<p class="text-white/50 text-center py-4">السلة فارغة</p>';
             } else {
-                cart.forEach((item, index) => {
+                container.innerHTML = cart.map((item, index) => {
                     const itemTotal = item.price * item.quantity;
                     subtotal += itemTotal;
                     
-                    cartHtml += `
-                        <tr class="border-b border-white/10">
-                            <td class="py-2">${item.name}</td>
-                            <td class="py-2">
-                                <div class="flex items-center justify-center">
-                                    <button class="quantity-btn bg-white/20 w-6 h-6 rounded-full text-xs" 
-                                            onclick="updateQuantity(${index}, -1)">-</button>
-                                    <span class="mx-2">${item.quantity}</span>
-                                    <button class="quantity-btn bg-white/20 w-6 h-6 rounded-full text-xs" 
-                                            onclick="updateQuantity(${index}, 1)">+</button>
-                                </div>
-                            </td>
-                            <td class="py-2">${SAWA_POS.formatCurrency(itemTotal)}</td>
-                            <td class="py-2">
-                                <button class="text-red-400 hover:text-red-600" onclick="removeFromCart(${index})">
-                                    <i class="fa-solid fa-trash"></i>
+                    return `
+                        <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                            <div class="flex-1">
+                                <div class="font-semibold text-sm">${item.name}</div>
+                                <div class="text-white/70 text-xs">${formatCurrency(item.price)}</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="updateQuantity(${index}, -1)" class="w-6 h-6 bg-white/20 rounded text-xs">-</button>
+                                <span class="mx-2">${item.quantity}</span>
+                                <button onclick="updateQuantity(${index}, 1)" class="w-6 h-6 bg-white/20 rounded text-xs">+</button>
+                                <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300 ml-2">
+                                    <i class="fa-solid fa-trash text-xs"></i>
                                 </button>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     `;
-                });
+                }).join('');
             }
-            
-            cartItems.innerHTML = cartHtml;
-            
+
             const tax = subtotal * 0.1;
             const total = subtotal + tax;
-            
-            subtotalElement.textContent = SAWA_POS.formatCurrency(subtotal);
-            taxAmountElement.textContent = SAWA_POS.formatCurrency(tax);
-            totalAmountElement.textContent = SAWA_POS.formatCurrency(total);
+
+            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('taxAmount').textContent = formatCurrency(tax);
+            document.getElementById('totalAmount').textContent = formatCurrency(total);
         }
 
         // تحديث الكمية
         function updateQuantity(index, change) {
             const item = cart[index];
-            const product = window.appData.products.find(p => p.id === item.id);
+            const product = products.find(p => p.id === item.id);
             
             if (change > 0 && product.stock > item.quantity) {
                 item.quantity += change;
@@ -329,36 +327,31 @@
         }
 
         // إفراغ السلة
-        document.getElementById('clearCart').addEventListener('click', function() {
-            if (cart.length > 0 && confirm('هل تريد إفراغ سلة المشتريات؟')) {
+        function clearCart() {
+            if (cart.length === 0) return;
+            if (confirm('هل تريد إفراغ سلة المشتريات؟')) {
                 cart = [];
                 updateCart();
+                showNotification('تم إفراغ السلة');
             }
-        });
+        }
 
         // إنهاء البيع
-        document.getElementById('completeSale').addEventListener('click', function() {
+        function completeSale() {
             if (cart.length === 0) {
-                SAWA_POS.showNotification('السلة فارغة! أضف منتجات أولاً.', 'error');
+                showNotification('السلة فارغة!', 'error');
                 return;
             }
-            
-            completeSale();
-        });
 
-        // إتمام عملية البيع
-        function completeSale() {
-            const customerSelect = document.getElementById('customerSelect');
+            const customer = document.getElementById('customerSelect').value;
             const paymentMethod = document.getElementById('paymentMethod').value;
-            const customer = customerSelect.value || 'عميل نقدي';
-            
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const tax = subtotal * 0.1;
             const total = subtotal + tax;
-            
-            // إنشاء فاتورة جديدة
-            const newInvoice = {
-                id: SAWA_POS.generateId(),
+
+            // إنشاء فاتورة
+            const invoice = {
+                id: Date.now(),
                 date: new Date().toISOString().split('T')[0],
                 time: new Date().toLocaleTimeString('ar-IQ'),
                 customer: customer,
@@ -366,58 +359,90 @@
                 subtotal: subtotal,
                 tax: tax,
                 paymentMethod: paymentMethod,
-                items: [...cart],
-                user: SAWA_POS.getCurrentUser().name
+                items: [...cart]
             };
+
+            // حفظ الفاتورة
+            const data = loadData();
+            data.invoices.push(invoice);
             
             // تحديث المخزون
             cart.forEach(cartItem => {
-                const product = window.appData.products.find(p => p.id === cartItem.id);
+                const product = data.products.find(p => p.id === cartItem.id);
                 if (product) {
                     product.stock -= cartItem.quantity;
                 }
             });
-            
-            // إضافة الفاتورة للبيانات
-            window.appData.invoices.push(newInvoice);
-            SAWA_POS.saveData();
-            
+
+            localStorage.setItem('sawaPOSData', JSON.stringify(data));
+
             // طباعة الفاتورة
-            printInvoice(newInvoice);
-            
-            // إعادة تعيين السلة
+            printInvoice(invoice);
+
+            // إعادة تعيين
             cart = [];
             updateCart();
-            
-            SAWA_POS.showNotification('تمت عملية البيع بنجاح!');
+            showNotification('تمت عملية البيع بنجاح!');
         }
 
         // طباعة الفاتورة
         function printInvoice(invoice) {
-            // تحديث بيانات الطباعة
-            document.getElementById('printCompanyName').textContent = window.appData.settings.companyName;
+            const data = loadData();
+            
+            document.getElementById('printCompany').textContent = data.settings.companyName;
             document.getElementById('printDate').textContent = `التاريخ: ${invoice.date} ${invoice.time}`;
-            document.getElementById('printInvoiceId').textContent = invoice.id;
+            document.getElementById('printInvoiceId').textContent = `رقم الفاتورة: ${invoice.id}`;
             document.getElementById('printCustomer').textContent = invoice.customer;
             
-            // تحديث العناصر
-            const printItems = invoice.items.map(item => `
+            document.getElementById('printItems').innerHTML = invoice.items.map(item => `
                 <tr class="border-b border-gray-200">
-                    <td class="py-1">${item.name}</td>
-                    <td class="py-1">${item.quantity}</td>
-                    <td class="py-1">${SAWA_POS.formatCurrency(item.price * item.quantity)}</td>
+                    <td class="py-2 text-sm">${item.name}</td>
+                    <td class="py-2 text-sm">${item.quantity}</td>
+                    <td class="py-2 text-sm">${formatCurrency(item.price * item.quantity)}</td>
                 </tr>
             `).join('');
-            document.getElementById('printItems').innerHTML = printItems;
             
-            // تحديث المبالغ
-            document.getElementById('printSubtotal').textContent = SAWA_POS.formatCurrency(invoice.subtotal);
-            document.getElementById('printTax').textContent = SAWA_POS.formatCurrency(invoice.tax);
-            document.getElementById('printTotal').textContent = SAWA_POS.formatCurrency(invoice.total);
-            
+            document.getElementById('printSubtotal').textContent = formatCurrency(invoice.subtotal);
+            document.getElementById('printTax').textContent = formatCurrency(invoice.tax);
+            document.getElementById('printTotal').textContent = formatCurrency(invoice.total);
+
             // الطباعة
+            const printContent = document.getElementById('printArea').innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = printContent;
             window.print();
+            document.body.innerHTML = originalContent;
+            
+            // إعادة تحميل البيانات
+            loadData();
+            displayProducts();
         }
+
+        // إشعارات
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            } text-white`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // تهيئة الصفحة
+        function initPOS() {
+            loadData();
+            displayProducts();
+            loadCustomers();
+            updateCart();
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        // تشغيل عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initPOS);
     </script>
 </body>
 </html>
